@@ -44,11 +44,11 @@ const About = () => {
               <ArrowLeft className="mr-2 h-4 w-4 group-hover:-translate-x-1 transition-transform" /> Back to Home
             </Link>
             <h1 className="text-6xl md:text-8xl font-bold font-space mb-6 tracking-tighter">
-              WHO WE <span className="text-wrlds-blue">ARE</span>
+              Modern Hackers for <span className="text-wrlds-blue">a Modern World</span> .
             </h1>
-            <p className="text-xl md:text-2xl text-white/80 max-w-2xl mx-auto font-light">
+            {/* <p className="text-xl md:text-2xl text-white/80 max-w-2xl mx-auto font-light">
               Architects of the connected age.
-            </p>
+            </p> */}
           </motion.div>
 
           {/* Fade to content */}
@@ -71,10 +71,10 @@ const About = () => {
                 <h2 className="text-3xl md:text-5xl font-bold mb-6">Our Mission</h2>
                 <div className="h-1 w-20 bg-wrlds-blue mb-8"></div>
                 <p className="text-xl text-wrlds-muted leading-relaxed mb-6">
-                  At WRLDS Technologies, we utilize the precision of hardware engineering with the limitless potential of AI to forge products that don't just connect—they evolve.
+                  At CST Academy, our mission is to empower the next generation of ethical hackers by providing practical, real-world cybersecurity education.
                 </p>
                 <p className="text-lg text-white/60 leading-relaxed">
-                  We believe that the future belongs to intelligent, connected products that enhance human capabilities and improve quality of life across industries.
+                  We believe the future belongs to skilled security professionals who understand how systems work, think like attackers, and defend digital infrastructure. Through hands-on training and industry-focused learning, we aim to build a community of ethical hackers ready to secure the connected world.
                 </p>
               </div>
               <div className="relative h-80 rounded-2xl overflow-hidden shadow-2xl skew-y-3 hover:skew-y-0 transition-transform duration-700">
@@ -91,14 +91,15 @@ const About = () => {
               whileInView={{ opacity: 1 }}
               className="text-4xl md:text-6xl font-bold text-center mb-16"
             >
-              The <span className="text-transparent bg-clip-text bg-gradient-to-r from-wrlds-blue to-white">Trinity</span> of IoT
+              The  
+ <span className="text-transparent bg-clip-text bg-gradient-to-r from-wrlds-blue to-white">Trinity</span> of Cybersecurity
             </motion.h2>
 
             <div className="grid md:grid-cols-3 gap-8">
               {[
-                { title: "Hardware", desc: "Circuit design, mechanical engineering, and connectivity solutions.", delay: 0 },
-                { title: "Software & AI", desc: "Embedded firmware, cloud platforms, and machine learning.", delay: 0.2 },
-                { title: "Production", desc: "Manufacturing partnerships, certification, and global scale.", delay: 0.4 }
+                { title: "Offensive Security", desc: "Ethical hacking, penetration testing, vulnerability research, and real-world attack simulations.", delay: 0 },
+                { title: "Security Intelligence", desc: "Threat analysis, malware research, OSINT, and advanced cyber defense strategies.", delay: 0.2 },
+                { title: "Cyber Defense", desc: "Security monitoring, incident response, and protecting digital infrastructures at scale.", delay: 0.4 }
               ].map((pillar, i) => (
                 <motion.div
                   key={i}

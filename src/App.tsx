@@ -41,10 +41,10 @@ const App = () => {
         <Toaster />
         <Sonner /> 
         <BrowserRouter> 
-          <Routes> 
+          <Routes>  
             <Route path="/" element={<Index />} />
             <Route path="/cases" element={<Cases />} />
-            <Route path="/login" element={<AdminLogin />} />
+            <Route path="/launch/dashboard" element={<AdminLogin />} />
             <Route path="/admin" element={<AdminProtectedRoute><AdminLayout /></AdminProtectedRoute>}>
               <Route path="dashboard" element={<AdminDashboard />} />
               <Route path="workshop" element={<AdminWorkshopPage />} />

@@ -61,9 +61,6 @@ const LoginPage = () => {
           <h1 className="text-3xl font-bold text-white">
             CST <span className="text-blue-500">Academy</span>
           </h1>
-          <p className="text-gray-400 text-sm mt-2">
-            Admin Login
-          </p>
         </div>
 
         <form className="space-y-5" onSubmit={handleLogin}>

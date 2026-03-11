@@ -56,11 +56,18 @@ const WorkshopPopup = ({ isOpen, onClose }) => {
 
   /* ================= BODY SCROLL LOCK ================= */
   useEffect(() => {
-    document.body.style.overflow = isOpen ? "hidden" : "auto";
-    return () => {
-      document.body.style.overflow = "auto";
-    };
-  }, [isOpen]);
+  const shouldLockScroll = isOpen && cmsData?.enabled;
+
+  if (shouldLockScroll) {
+    document.body.style.overflow = "hidden";
+  } else {
+    document.body.style.overflow = "auto";
+  }
+
+  return () => {
+    document.body.style.overflow = "auto";
+  };
+}, [isOpen, cmsData]);
 
   if (!isOpen || !cmsData?.enabled) return null;
 
@@ -157,13 +164,13 @@ const WorkshopPopup = ({ isOpen, onClose }) => {
             </h2>
 
             {cmsData.image && (
-              <div className="mt-5">
-                <img
-                  src={cmsData.image}
-                  alt="Workshop"
-                  className="w-full h-48 sm:h-64 object-cover rounded-xl"
-                />
-              </div>
+              <div className="mt-6 bg-[#020617] border border-blue-500/20 rounded-xl p-6 flex justify-center">
+  <img
+    src={cmsData.image}
+    alt="Workshop"
+    className="max-h-40 object-contain"
+  />
+</div>
             )}
 
             <div className="mt-6">
