@@ -53,7 +53,7 @@ const Services = () => {
   return (
     <PageLayout>
       <SEO
-        title={`${category || "Projects"} - WRLDS`}
+        title={`${category || "Projects"} - CST Academy`}
         description={`Explore ${category || ""} ${type || ""} programs and insights.`}
       />
 

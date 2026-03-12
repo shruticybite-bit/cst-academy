@@ -4,6 +4,7 @@ import axios from "axios";
 import MapSection from "./MapSection";
 
 const ContactSection = () => {
+
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -13,36 +14,93 @@ const ContactSection = () => {
     message: "",
   });
 
+  const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
-  const [error, setError] = useState("");
 
+  // input change
   const handleChange = (e) => {
+
+    const { name, value } = e.target;
+
+    // phone me sirf number allow
+    if (name === "phone") {
+      if (!/^\d*$/.test(value)) return;
+    }
+
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value,
+      [name]: value,
+    });
+
+    setErrors({
+      ...errors,
+      [name]: "",
     });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError("");
-    setSuccess(false);
+  // validation
+  const validateForm = () => {
 
-    if (!formData.firstName || !formData.email || !formData.message) {
-      setError("Please fill all required fields");
-      return;
+    let newErrors = {};
+
+    if (!formData.firstName.trim()) {
+      newErrors.firstName = "First name is required";
     }
 
+    // email validation
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+
+    if (!formData.email) {
+      newErrors.email = "Email is required";
+    }
+    else if (!emailRegex.test(formData.email)) {
+      newErrors.email = "Enter valid Gmail (example@gmail.com)";
+    }
+
+    // phone validation
+    const phoneRegex = /^[0-9]{10}$/;
+
+    if (!formData.phone) {
+      newErrors.phone = "Phone number is required";
+    }
+    else if (!phoneRegex.test(formData.phone)) {
+      newErrors.phone = "Phone number must be 10 digits";
+    }
+
+    if (!formData.message.trim()) {
+      newErrors.message = "Message is required";
+    }
+
+    setErrors(newErrors);
+
+    return Object.keys(newErrors).length === 0;
+  };
+
+  // submit
+  const handleSubmit = async (e) => {
+
+    e.preventDefault();
+
+    setSuccess(false);
+
+    const isValid = validateForm();
+
+    if (!isValid) return;
+
     try {
+
       setLoading(true);
+
       const res = await axios.post(
         "https://cst-acadmay-backend.onrender.com/api/contact",
         formData
       );
 
       if (res.data.success) {
+
         setSuccess(true);
+
         setFormData({
           firstName: "",
           lastName: "",
@@ -51,160 +109,201 @@ const ContactSection = () => {
           subject: "",
           message: "",
         });
+
+        setErrors({});
       }
+
     } catch (err) {
-      setError("Something went wrong. Try again.");
+
+      console.log(err);
+
     } finally {
+
       setLoading(false);
+
     }
+
   };
 
   return (
     <>
-    <section id="contact" className="py-20 px-4">
-      
-      <div className="max-w-6xl mx-auto">
+      <section id="contact" className="py-20 px-4">
 
-        <div className="rounded-3xl overflow-hidden border border-white/10 bg-white/5 backdrop-blur-xl shadow-2xl">
+        <div className="max-w-6xl mx-auto">
 
-          <div className="grid md:grid-cols-2">
+          <div className="rounded-3xl overflow-hidden border border-white/10 bg-white/5 backdrop-blur-xl shadow-2xl">
 
-            {/* LEFT SIDE */}
-            <div className="p-12 bg-[#0b1224] text-white">
-              <h2 className="text-3xl font-bold mb-4">
-                Contact Information
-              </h2>
-              <p className="text-white/60 mb-10">
-                Say something to start a live chat!
-              </p>
+            <div className="grid md:grid-cols-2">
 
-              <div className="space-y-6 text-white/80">
-                <div className="flex items-center gap-4">
-                  <Phone className="w-5 h-5 text-wrlds-blue" />
-                  +91-8210543772
-                </div>
+              {/* LEFT */}
+              <div className="p-12 bg-[#0b1224] text-white">
 
-                <div className="flex items-center gap-4">
-                  <Mail className="w-5 h-5 text-wrlds-blue" />
-                  info@cybite.in
-                </div>
+                <h2 className="text-3xl font-bold mb-4">
+                  Contact Information
+                </h2>
 
-                <div className="flex items-start gap-4">
-                  <MapPin className="w-5 h-5 mt-1 text-wrlds-blue" />
-                  <span>
-                    G-9/85, Sangam Vihar <br />
-                    New Delhi-110080
-                  </span>
-                </div>
-              </div>
-            </div>
+                <div className="space-y-6 text-white/80">
 
-            {/* RIGHT SIDE */}
-            <div className="p-12 bg-gradient-to-br from-[#0f1a35] to-[#111c3d] text-white">
-
-              <form onSubmit={handleSubmit} className="space-y-8">
-
-                {/* Name */}
-                <div className="grid sm:grid-cols-2 gap-6">
-                  <input
-                    type="text"
-                    name="firstName"
-                    placeholder="First Name"
-                    value={formData.firstName}
-                    onChange={handleChange}
-                    className="bg-transparent border-b border-white/30 focus:border-wrlds-blue outline-none pb-2"
-                  />
-
-                  <input
-                    type="text"
-                    name="lastName"
-                    placeholder="Last Name"
-                    value={formData.lastName}
-                    onChange={handleChange}
-                    className="bg-transparent border-b border-white/30 focus:border-wrlds-blue outline-none pb-2"
-                  />
-                </div>
-
-                {/* Email + Phone */}
-                <div className="grid sm:grid-cols-2 gap-6">
-                  <input
-                    type="email"
-                    name="email"
-                    placeholder="Email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    className="bg-transparent border-b border-white/30 focus:border-wrlds-blue outline-none pb-2"
-                  />
-
-                  <input
-                    type="text"
-                    name="phone"
-                    placeholder="Phone Number"
-                    value={formData.phone}
-                    onChange={handleChange}
-                    className="bg-transparent border-b border-white/30 focus:border-wrlds-blue outline-none pb-2"
-                  />
-                </div>
-
-                {/* Subject */}
-                {/* <div>
-                  <p className="mb-3 text-white/60">Select Subject?</p>
-                  <div className="flex flex-wrap gap-6 text-sm">
-                    {["UI/UX Design", "Development", "Cyber Security", "Training", "Digital Marketing"].map((item) => (
-                      <label key={item} className="flex items-center gap-2 cursor-pointer">
-                        <input
-                          type="radio"
-                          name="subject"
-                          value={item}
-                          onChange={handleChange}
-                          className="accent-wrlds-blue"
-                        />
-                        {item}
-                      </label>
-                    ))}
+                  <div className="flex items-center gap-4">
+                    <Phone className="w-5 h-5 text-wrlds-blue" />
+                    +91 92037 33491
                   </div>
-                </div> */}
 
-                {/* Message */}
-                <textarea
-                  rows="3"
-                  name="message"
-                  placeholder="Write your message.."
-                  value={formData.message}
-                  onChange={handleChange}
-                  className="w-full bg-transparent border-b border-white/30 focus:border-wrlds-blue outline-none pb-2 resize-none"
-                ></textarea>
+                  <div className="flex items-center gap-4">
+                    <Mail className="w-5 h-5 text-wrlds-blue" />
+                    academy.codesec@gmail.com
+                  </div>
 
-                {error && <p className="text-red-400 text-sm">{error}</p>}
-                {success && (
-                  <p className="text-green-400 text-sm">
-                    Message sent successfully!
-                  </p>
-                )}
+                  <div className="flex items-start gap-4">
+                    <MapPin className="w-5 h-5 mt-1 text-wrlds-blue" />
+                    <span>
+                      207, 5th floor, Sunrise tower, Above Samarpan Jwellers,
+                      <br />
+                      MG Road, Indore, MP, 452003
+                    </span>
+                  </div>
 
-                {/* Button */}
-                <div className="flex justify-end">
-                  <button
-                    type="submit"
-                    disabled={loading}
-                    className="px-8 py-3 bg-wrlds-blue hover:opacity-90 rounded-lg font-semibold transition disabled:opacity-60"
-                  >
-                    {loading ? "Sending..." : "Send Message"}
-                  </button>
                 </div>
 
-              </form>
+              </div>
+
+              {/* RIGHT */}
+              <div className="p-12 bg-gradient-to-br from-[#0f1a35] to-[#111c3d] text-white">
+
+                <form onSubmit={handleSubmit} className="space-y-8">
+
+                  {/* name */}
+                  <div className="grid sm:grid-cols-2 gap-6">
+
+                    <div>
+                      <input
+                        type="text"
+                        name="firstName"
+                        placeholder="First Name"
+                        value={formData.firstName}
+                        onChange={handleChange}
+                        className="w-full bg-transparent border-b border-white/30 focus:border-wrlds-blue outline-none pb-2"
+                      />
+
+                      {errors.firstName && (
+                        <p className="text-red-400 text-sm mt-1">
+                          {errors.firstName}
+                        </p>
+                      )}
+                    </div>
+
+                    <input
+                      type="text"
+                      name="lastName"
+                      placeholder="Last Name"
+                      value={formData.lastName}
+                      onChange={handleChange}
+                      className="bg-transparent border-b border-white/30 focus:border-wrlds-blue outline-none pb-2"
+                    />
+
+                  </div>
+
+
+                  {/* email phone */}
+                  <div className="grid sm:grid-cols-2 gap-6">
+
+                    <div>
+
+                      <input
+                        type="email"
+                        name="email"
+                        placeholder="example@gmail.com"
+                        value={formData.email}
+                        onChange={handleChange}
+                        className="w-full bg-transparent border-b border-white/30 focus:border-wrlds-blue outline-none pb-2"
+                      />
+
+                      {errors.email && (
+                        <p className="text-red-400 text-sm mt-1">
+                          {errors.email}
+                        </p>
+                      )}
+
+                    </div>
+
+
+                    <div>
+
+                      <input
+                        type="text"
+                        name="phone"
+                        placeholder="Phone Number"
+                        maxLength="10"
+                        value={formData.phone}
+                        onChange={handleChange}
+                        className="w-full bg-transparent border-b border-white/30 focus:border-wrlds-blue outline-none pb-2"
+                      />
+
+                      {errors.phone && (
+                        <p className="text-red-400 text-sm mt-1">
+                          {errors.phone}
+                        </p>
+                      )}
+
+                    </div>
+
+                  </div>
+
+
+                  {/* message */}
+                  <div>
+
+                    <textarea
+                      rows="3"
+                      name="message"
+                      placeholder="Write your message.."
+                      value={formData.message}
+                      onChange={handleChange}
+                      className="w-full bg-transparent border-b border-white/30 focus:border-wrlds-blue outline-none pb-2 resize-none"
+                    />
+
+                    {errors.message && (
+                      <p className="text-red-400 text-sm mt-1">
+                        {errors.message}
+                      </p>
+                    )}
+
+                  </div>
+
+
+                  {success && (
+                    <p className="text-green-400 text-sm">
+                      Message sent successfully!
+                    </p>
+                  )}
+
+                  <div className="flex justify-end">
+
+                    <button
+                      type="submit"
+                      disabled={loading}
+                      className="px-8 py-3 bg-wrlds-blue hover:opacity-90 rounded-lg font-semibold transition disabled:opacity-60"
+                    >
+                      {loading ? "Sending..." : "Send Message"}
+                    </button>
+
+                  </div>
+
+                </form>
+
+              </div>
 
             </div>
 
           </div>
+
         </div>
-      </div>
-      
-    </section>
-    <MapSection />
+
+      </section>
+
+      <MapSection />
+
     </>
-    
   );
 };
 

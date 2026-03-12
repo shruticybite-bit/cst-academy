@@ -50,7 +50,7 @@ const Blog = () => {
   return (
     <PageLayout>
       <SEO
-        title="WRLDS - News and insights about smart textile technology"
+        title="CST Academy - News and insights about smart textile technology"
         description="Stay updated with the latest news and insights about sensor-integrated textiles and smart technology from WRLDS Technologies."
         imageUrl={featuredPost?.imageUrl}
         keywords={[

@@ -81,7 +81,7 @@ const BlogPostDetail = () => {
   return (
     <PageLayout>
       <SEO
-        title={`${post.title} - WRLDS`}
+        title={`${post.title} - CST Academy`}
         description={post.excerpt}
         imageUrl={post.imageUrl}
         type="article"

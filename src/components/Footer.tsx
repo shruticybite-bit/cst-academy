@@ -1,6 +1,6 @@
 import { Instagram, Linkedin, Facebook } from "lucide-react";
 import { Heart } from "lucide-react";
-
+import { FaWhatsapp } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
 const Footer = () => {
@@ -24,11 +24,7 @@ const Footer = () => {
   </Link>
 </div>
             <p className="text-gray-400 text-sm leading-relaxed mb-6">
-              Codesec Technologies delivers top-notch Penetration Testing
-              (Ethical Hacking) and Cybersecurity services at pocket-friendly
-              prices. Our experts safeguard your business against modern
-              cyber threats, ensuring your IT infrastructure stays secure,
-              compliant, and resilient.
+             CST Academy is a premier cybersecurity training institute delivering hands-on, industry-aligned programs for students, working professionals, and corporate teams. Train on real tools, learn from experienced security professionals, and become job-ready for today's high-demand cybersecurity roles.
             </p>
 
             <div className="flex gap-4">
@@ -51,6 +47,14 @@ const Footer = () => {
               >
                 <Linkedin size={18} />
               </a>
+              <a
+              href="https://wa.me/919203733491"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-10 h-10 flex items-center justify-center border border-white/20 rounded-full hover:bg-blue-600 transition"
+            >
+              <FaWhatsapp size={18} />
+            </a>
             </div>
 
           </div>
@@ -61,7 +65,7 @@ const Footer = () => {
             <ul className="space-y-3 text-gray-400 text-sm">
               <li><a href="/" className="hover:text-white transition">Home</a></li>
               <li><a href="/about" className="hover:text-white transition">About Us</a></li>
-              <li><a href="/services" className="hover:text-white transition">Services</a></li>
+              {/* <li><a href="/services" className="hover:text-white transition">Services</a></li> */}
               <li><a href="/contacts-us" className="hover:text-white transition">Contact</a></li>
             </ul>
           </div>
@@ -70,6 +74,7 @@ const Footer = () => {
           <div>
             <h3 className="text-lg font-semibold mb-6">Our Services</h3>
             <ul className="space-y-3 text-gray-400 text-sm">
+              <li>Ethical Hacking Training</li>
               <li>Vulnerability Assessment & Penetration Testing</li>
               <li>Cybersecurity Consultation & Risk Management</li>
               <li>Web Application Security Testing</li>
@@ -83,17 +88,15 @@ const Footer = () => {
           <div>
             <h3 className="text-lg font-semibold mb-6">Contact Us</h3>
             <p className="text-gray-400 text-sm mb-4">
-              Indore, <br />
-              Madhya Pradesh, <br />
-              India
+             207, 5th floor, Sunrise tower, <br/> Above Samarpan Jwellers,<br /> MG Road,<br/> Indore, MP, 452003
             </p>
 
             <p className="text-gray-400 text-sm mb-2">
-              <span className="font-semibold text-white">Phone:</span> +91 9098934112
+              <span className="font-semibold text-white">Phone:</span> +91 92037 33491
             </p>
 
             <p className="text-gray-400 text-sm">
-              <span className="font-semibold text-white">Email:</span> codesectechnologies@gmail.com
+              <span className="font-semibold text-white">Email:</span> academy.codesec@gmail.com
             </p>
           </div>
         </div>

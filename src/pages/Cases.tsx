@@ -16,7 +16,7 @@ const Cases = () => {
   return (
     <PageLayout>
       <SEO 
-        title="Case Studies - WRLDS" 
+        title="Case Studies - CST Academy" 
         description="Explore our deployed IoT and smart textile solutions across industries including defense, sports, leisure, and manufacturing."
         imageUrl="/lovable-uploads/93ab0638-8190-4ccf-897f-21fda7f4f5ad.png"
         keywords={['case studies', 'IoT projects', 'smart textiles', 'connected products', 'hardware projects']}
