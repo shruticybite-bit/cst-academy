@@ -267,7 +267,7 @@ const WorkshopPopup = ({ isOpen, onClose }) => {
 
                 <p className="text-gray-400 max-w-sm mx-auto">
                   Your registration has been successfully submitted.
-                  Our team will contact you soon with workshop details.
+                  Our team will contact you soon with CST Academy details.
                 </p>
 
                 <button
