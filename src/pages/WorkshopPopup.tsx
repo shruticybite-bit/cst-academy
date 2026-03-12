@@ -6,6 +6,7 @@ const WorkshopPopup = ({ isOpen, onClose }) => {
   const [cmsData, setCmsData] = useState(null);
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
   const [formData, setFormData] = useState({
     firstName: "",
@@ -56,18 +57,18 @@ const WorkshopPopup = ({ isOpen, onClose }) => {
 
   /* ================= BODY SCROLL LOCK ================= */
   useEffect(() => {
-  const shouldLockScroll = isOpen && cmsData?.enabled;
+    const shouldLockScroll = isOpen && cmsData?.enabled;
 
-  if (shouldLockScroll) {
-    document.body.style.overflow = "hidden";
-  } else {
-    document.body.style.overflow = "auto";
-  }
+    if (shouldLockScroll) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
 
-  return () => {
-    document.body.style.overflow = "auto";
-  };
-}, [isOpen, cmsData]);
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [isOpen, cmsData]);
 
   if (!isOpen || !cmsData?.enabled) return null;
 
@@ -126,14 +127,14 @@ const WorkshopPopup = ({ isOpen, onClose }) => {
       if (res.data.success) {
         toast.success("Registration Successful 🎉");
 
+        setIsSubmitted(true);
+
         setFormData({
           firstName: "",
           lastName: "",
           phone: "",
           email: "",
         });
-
-        onClose();
       } else {
         toast.error("Something went wrong");
       }
@@ -165,12 +166,12 @@ const WorkshopPopup = ({ isOpen, onClose }) => {
 
             {cmsData.image && (
               <div className="mt-6 bg-[#020617] border border-blue-500/20 rounded-xl p-6 flex justify-center">
-  <img
-    src={cmsData.image}
-    alt="Workshop"
-    className="max-h-40 object-contain"
-  />
-</div>
+                <img
+                  src={cmsData.image}
+                  alt="Workshop"
+                  className="max-h-40 object-contain"
+                />
+              </div>
             )}
 
             <div className="mt-6">
@@ -184,84 +185,101 @@ const WorkshopPopup = ({ isOpen, onClose }) => {
             </p>
           </div>
 
-          {/* RIGHT FORM */}
-          <div className="bg-[#0b1220] p-5 sm:p-8">
-            <h3 className="text-lg sm:text-xl font-semibold text-white mb-6">
-              Register Now
-            </h3>
+          {/* RIGHT SECTION */}
+          <div className="bg-[#0b1220] p-5 sm:p-8 flex items-center justify-center">
 
-            <div className="space-y-4">
+            {!isSubmitted ? (
 
-              {/* First Name */}
-              <div>
-                <input
-                  type="text"
-                  name="firstName"
-                  value={formData.firstName}
-                  onChange={handleChange}
-                  placeholder="First Name *"
-                  className="w-full bg-[#1f2937] border border-gray-700 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-blue-500 outline-none"
-                />
-                {errors.firstName && (
-                  <p className="text-red-400 text-sm mt-1">
-                    {errors.firstName}
-                  </p>
-                )}
+              <div className="w-full">
+                <h3 className="text-lg sm:text-xl font-semibold text-white mb-6">
+                  Register Now
+                </h3>
+
+                <div className="space-y-4">
+
+                  <input
+                    type="text"
+                    name="firstName"
+                    value={formData.firstName}
+                    onChange={handleChange}
+                    placeholder="First Name *"
+                    className="w-full bg-[#1f2937] border border-gray-700 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-blue-500 outline-none"
+                  />
+                  {errors.firstName && (
+                    <p className="text-red-400 text-sm">{errors.firstName}</p>
+                  )}
+
+                  <input
+                    type="text"
+                    name="lastName"
+                    value={formData.lastName}
+                    onChange={handleChange}
+                    placeholder="Last Name"
+                    className="w-full bg-[#1f2937] border border-gray-700 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-blue-500 outline-none"
+                  />
+
+                  <input
+                    type="tel"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleChange}
+                    placeholder="Phone Number"
+                    className="w-full bg-[#1f2937] border border-gray-700 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-blue-500 outline-none"
+                  />
+                  {errors.phone && (
+                    <p className="text-red-400 text-sm">{errors.phone}</p>
+                  )}
+
+                  <input
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    placeholder="Email *"
+                    className="w-full bg-[#1f2937] border border-gray-700 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-blue-500 outline-none"
+                  />
+                  {errors.email && (
+                    <p className="text-red-400 text-sm">{errors.email}</p>
+                  )}
+
+                  <button
+                    onClick={handleSubmit}
+                    disabled={loading}
+                    className="w-full py-3 rounded-xl font-semibold bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 shadow-lg"
+                  >
+                    {loading ? "Submitting..." : "SUBMIT"}
+                  </button>
+                </div>
               </div>
 
-              {/* Last Name */}
-              <input
-                type="text"
-                name="lastName"
-                value={formData.lastName}
-                onChange={handleChange}
-                placeholder="Last Name"
-                className="w-full bg-[#1f2937] border border-gray-700 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-blue-500 outline-none"
-              />
+            ) : (
 
-              {/* Phone */}
-              <div>
-                <input
-                  type="tel"
-                  name="phone"
-                  value={formData.phone}
-                  onChange={handleChange}
-                  placeholder="Phone Number"
-                  className="w-full bg-[#1f2937] border border-gray-700 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-blue-500 outline-none"
-                />
-                {errors.phone && (
-                  <p className="text-red-400 text-sm mt-1">
-                    {errors.phone}
-                  </p>
-                )}
+              /* SUCCESS SCREEN */
+
+              <div className="text-center space-y-6 animate-fade-in">
+                <div className="w-20 h-20 mx-auto rounded-full bg-green-500/20 flex items-center justify-center text-4xl">
+                  ✅
+                </div>
+
+                <h2 className="text-3xl font-bold text-white">
+                  Thank You!
+                </h2>
+
+                <p className="text-gray-400 max-w-sm mx-auto">
+                  Your registration has been successfully submitted.
+                  Our team will contact you soon with workshop details.
+                </p>
+
+                <button
+                  onClick={onClose}
+                  className="px-6 py-3 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 transition"
+                >
+                  Close
+                </button>
               </div>
 
-              {/* Email */}
-              <div>
-                <input
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  placeholder="Email *"
-                  className="w-full bg-[#1f2937] border border-gray-700 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-blue-500 outline-none"
-                />
-                {errors.email && (
-                  <p className="text-red-400 text-sm mt-1">
-                    {errors.email}
-                  </p>
-                )}
-              </div>
+            )}
 
-              <button
-                onClick={handleSubmit}
-                disabled={loading}
-                className="w-full py-3 rounded-xl font-semibold bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 shadow-lg"
-              >
-                {loading ? "Submitting..." : "SUBMIT"}
-              </button>
-
-            </div>
           </div>
 
         </div>
