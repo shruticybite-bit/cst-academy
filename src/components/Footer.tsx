@@ -1,4 +1,6 @@
-import { Instagram, Linkedin } from "lucide-react";
+import { Instagram, Linkedin, Facebook } from "lucide-react";
+import { Heart } from "lucide-react";
+
 import { Link } from "react-router-dom";
 
 const Footer = () => {
@@ -13,12 +15,12 @@ const Footer = () => {
           <div>
             <div className="mb-6">
   <Link to="/">
-   <img
+  
+<img
   src="/logo/cst-academy-logo.png"
   alt="Codesec Technologies"
-  className="h-14 w-auto object-contain brightness-0 invert"
+  className="h-14 w-auto object-contain h-14 md:h-16 w-auto object-contain transition-all duration-300 mt-1 rounded-xl overflow-hidden mt-1 bg-white"
 />
-
   </Link>
 </div>
             <p className="text-gray-400 text-sm leading-relaxed mb-6">
@@ -31,14 +33,20 @@ const Footer = () => {
 
             <div className="flex gap-4">
               <a
-                href="#"
+                href="https://www.facebook.com/profile.php?id=61587851668725" target="_blank"
+                className="w-10 h-10 flex items-center justify-center border border-white/20 rounded-full hover:bg-blue-600 transition"
+              >
+                <Facebook size={18} />
+              </a>
+              <a
+                href="https://www.instagram.com/cstacademyindore?igsh=ZTljYnl2OWxsbGgz" target="_blank"
                 className="w-10 h-10 flex items-center justify-center border border-white/20 rounded-full hover:bg-blue-600 transition"
               >
                 <Instagram size={18} />
               </a>
 
               <a
-                href="#"
+                href="https://www.linkedin.com/company/cst-academy-indore" target="_blank"
                 className="w-10 h-10 flex items-center justify-center border border-white/20 rounded-full hover:bg-blue-600 transition"
               >
                 <Linkedin size={18} />
@@ -54,7 +62,7 @@ const Footer = () => {
               <li><a href="/" className="hover:text-white transition">Home</a></li>
               <li><a href="/about" className="hover:text-white transition">About Us</a></li>
               <li><a href="/services" className="hover:text-white transition">Services</a></li>
-              <li><a href="/contact" className="hover:text-white transition">Contact</a></li>
+              <li><a href="/contacts-us" className="hover:text-white transition">Contact</a></li>
             </ul>
           </div>
 
@@ -91,9 +99,21 @@ const Footer = () => {
         </div>
 
         {/* Bottom Bar */}
-        <div className="pt-8 text-center text-gray-500 text-sm">
-          © {new Date().getFullYear()} Codesec Technologies. All Rights Reserved.
-        </div>
+        <div className="pt-8 text-center text-gray-500 text-sm flex items-center justify-center flex-wrap gap-1">
+        © {new Date().getFullYear()} Codesec Technologies. All Rights Reserved. 
+        <span className="flex items-center gap-1">
+          <Heart className="w-4 h-4 text-pink-500 fill-pink-500" />
+        </span>
+        designed by 
+        <a 
+          href="https://cybite.in" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          className="text-pink-500 font-semibold hover:underline"
+        >
+          cybite.in
+        </a>
+      </div>
 
       </div>
     </footer>

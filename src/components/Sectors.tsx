@@ -8,7 +8,7 @@ const sectors = [
         title: "Students & Freshers",
         subtitle: "Students & Freshers",
         icon: <Shield className="w-8 h-8 md:w-10 md:h-10 text-white" />,
-        description: "Build a strong cybersecurity foundation with practical labs, mentorship, and placement support.",
+        description: "Build a strong cybersecurity foundation with practical labs, mentorship, and placement guide.",
         gradient: "from-slate-900 to-slate-800",
        imageUrl: "/sector/2.png"
     },

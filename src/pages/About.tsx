@@ -1,28 +1,126 @@
-import { useRef } from 'react';
+import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { ArrowLeft } from 'lucide-react';
-import { Link } from 'react-router-dom';
-import PageLayout from '@/components/PageLayout';
-import ThreeBackground from '@/components/ThreeBackground';
-import Safe3D from '@/components/Safe3D';
+import { ArrowLeft } from "lucide-react";
+import { Link } from "react-router-dom";
+
+import PageLayout from "@/components/PageLayout";
+import ThreeBackground from "@/components/ThreeBackground";
+import Safe3D from "@/components/Safe3D";
+
+/* ---------------- TEAM CARD ---------------- */
+
+interface TeamCardProps {
+  name: string
+  role: string
+  description: string
+  image: string
+  category: string
+}
+
+const TeamCard = ({ name, role, description, image, category }: TeamCardProps) => {
+  return (
+
+    <motion.div
+      whileHover={{ y: -12, scale: 1.05 }}
+      transition={{ type: "spring", stiffness: 200 }}
+      className="group rounded-2xl overflow-hidden border border-white/10 bg-white/5 backdrop-blur-xl hover:border-cyan-400 hover:shadow-[0_0_25px_rgba(0,255,255,0.4)] transition-all duration-300"
+    >
+
+      {/* Image */}
+
+      <div className="relative aspect-[4/3] overflow-hidden">
+
+        <img
+          src={image}
+          alt={name}
+          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+        />
+
+        <span className="absolute top-3 left-3 text-xs px-3 py-1 bg-black/60 rounded-full text-white backdrop-blur">
+          {category}
+        </span>
+
+      </div>
+
+      {/* Info */}
+
+      <div className="p-6 text-center">
+
+        <h3 className="text-lg font-semibold text-white">
+          {name}
+        </h3>
+
+        <p className="text-wrlds-blue text-sm">
+          {role}
+        </p>
+
+        <p className="text-gray-300 text-sm mt-3">
+          {description}
+        </p>
+
+      </div>
+
+    </motion.div>
+
+  )
+}
+
+/* ---------------- BACKGROUND ---------------- */
 
 const FallbackBackground = () => (
   <div className="absolute inset-0 bg-wrlds-dark overflow-hidden">
-    <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-wrlds-blue/10 rounded-full blur-[150px] animate-pulse-slow"></div>
+    <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-wrlds-blue/10 rounded-full blur-[150px] animate-pulse"></div>
   </div>
-);
+)
+
+/* ---------------- ABOUT PAGE ---------------- */
 
 const About = () => {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({ target: containerRef });
 
-  // Parallax transforms
-  const yHero = useTransform(scrollYProgress, [0, 0.2], ["0%", "50%"]);
-  const opacityHero = useTransform(scrollYProgress, [0, 0.2], [1, 0]);
+  const teams = [
+    {
+      id: 1,
+      name: "Rahul Sharma",
+      role: "Cyber Security Trainer",
+      description:
+        "Specializes in ethical hacking, penetration testing and cybersecurity training.",
+      image: "/teams/1.jfif",
+      category: "Cybersecurity"
+    },
+    {
+      id: 2,
+      name: "Amit Verma",
+      role: "Ethical Hacker",
+      description:
+        "Focused on vulnerability assessment and real-world attack simulations.",
+      image: "/teams/2.jfif",
+      category: "Tools"
+    },
+    // {
+    //   id: 3,
+    //   name: "Neha Singh",
+    //   role: "Security Analyst",
+    //   description:
+    //     "Works on threat monitoring, incident response and infrastructure defense.",
+    //   image: "/teams/3.jfif",
+    //   category: "Defense"
+    // }
+  ]
+
+  const containerRef = useRef<HTMLDivElement>(null)
+
+  const { scrollYProgress } = useScroll({
+    target: containerRef
+  })
+
+  const opacityHero = useTransform(scrollYProgress, [0, 0.2], [1, 0])
 
   return (
+
     <PageLayout>
-      {/* Global starfield background */}
+
+      {/* Background */}
+
       <div className="fixed inset-0 z-0">
         <Safe3D fallback={<FallbackBackground />}>
           <ThreeBackground />
@@ -31,145 +129,159 @@ const About = () => {
 
       <div ref={containerRef} className="relative z-10 text-white min-h-screen">
 
-        {/* Hero Section with Parallax Background */}
-        <section className="relative h-[80vh] flex items-center justify-center overflow-hidden">
-          {/* Removed background image - now uses global starfield */}
-          <div className="absolute inset-0 bg-black/30 z-0"></div>
+        {/* HERO */}
+
+        <section className="relative h-[80vh] flex items-center justify-center">
+
+          <div className="absolute inset-0 bg-black/40"></div>
 
           <motion.div
             style={{ opacity: opacityHero }}
             className="container relative z-20 text-center px-6"
           >
-            <Link to="/" className="inline-flex items-center text-white/60 hover:text-white mb-8 transition-colors group">
-              <ArrowLeft className="mr-2 h-4 w-4 group-hover:-translate-x-1 transition-transform" /> Back to Home
+
+            <Link
+              to="/"
+              className="inline-flex items-center text-white/60 hover:text-white mb-8 transition group"
+            >
+              <ArrowLeft className="mr-2 h-4 w-4 group-hover:-translate-x-1 transition-transform" />
+              Back to Home
             </Link>
-            <h1 className="text-6xl md:text-8xl font-bold font-space mb-6 tracking-tighter">
-              Modern Hackers for <span className="text-wrlds-blue">a Modern World</span> .
+
+            <h1 className="text-6xl md:text-8xl font-bold tracking-tight">
+              Modern Hackers for{" "}
+              <span className="text-wrlds-blue">
+                a Modern World
+              </span>
             </h1>
-            {/* <p className="text-xl md:text-2xl text-white/80 max-w-2xl mx-auto font-light">
-              Architects of the connected age.
-            </p> */}
+
           </motion.div>
 
-          {/* Fade to content */}
-          <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-wrlds-dark to-transparent z-20"></div>
         </section>
 
-        {/* Content Sections */}
-        <div className="container mx-auto px-6 py-24 relative z-30 -mt-20">
+        {/* CONTENT */}
 
-          {/* Mission Card */}
+        <div className="max-w-7xl mx-auto px-6 py-24 -mt-20">
+
+          {/* MISSION */}
+
           <motion.div
-            initial={{ opacity: 0, y: 50 }}
+            initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
+            transition={{ duration: 0.7 }}
             className="glass-card p-12 rounded-3xl mb-32 border-white/10"
           >
+
             <div className="grid md:grid-cols-2 gap-12 items-center">
+
               <div>
-                <h2 className="text-3xl md:text-5xl font-bold mb-6">Our Mission</h2>
+
+                <h2 className="text-4xl font-bold mb-6">
+                  Our Mission
+                </h2>
+
                 <div className="h-1 w-20 bg-wrlds-blue mb-8"></div>
-                <p className="text-xl text-wrlds-muted leading-relaxed mb-6">
+
+                <p className="text-xl text-wrlds-muted mb-6">
                   At CST Academy, our mission is to empower the next generation of ethical hackers by providing practical, real-world cybersecurity education.
                 </p>
-                <p className="text-lg text-white/60 leading-relaxed">
+
+                <p className="text-white/70">
                   We believe the future belongs to skilled security professionals who understand how systems work, think like attackers, and defend digital infrastructure. Through hands-on training and industry-focused learning, we aim to build a community of ethical hackers ready to secure the connected world.
                 </p>
+
               </div>
-              <div className="relative h-80 rounded-2xl overflow-hidden shadow-2xl skew-y-3 hover:skew-y-0 transition-transform duration-700">
-                <img src="/lovable-uploads/526dc38a-25fa-40d4-b520-425b23ae0464.png" alt="Mission" className="w-full h-full object-cover" />
-                <div className="absolute inset-0 bg-wrlds-blue/20 mix-blend-overlay"></div>
-              </div>
+
+              <img
+                src="/lovable-uploads/526dc38a-25fa-40d4-b520-425b23ae0464.png"
+                className="w-full h-80 object-cover rounded-2xl shadow-xl"
+              />
+
             </div>
+
           </motion.div>
 
-          {/* The Pillars - Horizontal Scroll/Grid */}
+
+          {/* TRINITY */}
+
           <div className="mb-32">
-            <motion.h2
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              className="text-4xl md:text-6xl font-bold text-center mb-16"
-            >
-              The  
- <span className="text-transparent bg-clip-text bg-gradient-to-r from-wrlds-blue to-white">Trinity</span> of Cybersecurity
-            </motion.h2>
+
+            <h2 className="text-5xl font-bold text-center mb-16">
+              The <span className="text-transparent bg-clip-text bg-gradient-to-r from-wrlds-blue to-white">Trinity</span> of Cybersecurity
+            </h2>
 
             <div className="grid md:grid-cols-3 gap-8">
-              {[
-                { title: "Offensive Security", desc: "Ethical hacking, penetration testing, vulnerability research, and real-world attack simulations.", delay: 0 },
-                { title: "Security Intelligence", desc: "Threat analysis, malware research, OSINT, and advanced cyber defense strategies.", delay: 0.2 },
-                { title: "Cyber Defense", desc: "Security monitoring, incident response, and protecting digital infrastructures at scale.", delay: 0.4 }
-              ].map((pillar, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ delay: pillar.delay, duration: 0.6 }}
-                  className="p-8 rounded-2xl bg-white/5 border border-white/5 hover:bg-white/10 transition-colors group"
-                >
-                  <h3 className="text-2xl font-bold mb-4 group-hover:text-wrlds-blue transition-colors">{pillar.title}</h3>
-                  <p className="text-wrlds-muted">{pillar.desc}</p>
-                </motion.div>
-              ))}
-            </div>
-          </div>
 
-          {/* Team Section */}
-          <div className="mb-32">
-            <h2 className="text-4xl font-bold mb-12 text-center">Meet the Visionaries</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {[
                 {
-                  name: "Felix von Heland",
-                  role: "CEO & Founder",
-                  email: "felix@wrlds.com",
-                  image: "/lovable-uploads/aa5291bd-2417-4c1e-9a02-0bcc71a92507.png"
+                  title: "Offensive Security",
+                  desc: "Ethical hacking, penetration testing, vulnerability research, and real-world attack simulations."
                 },
                 {
-                  name: "Niek Bijman",
-                  role: "Software Lead",
-                  email: null,
-                  image: "/lovable-uploads/e502f601-c519-43a8-86f5-5fa89ae50d2f.png"
+                  title: "Security Intelligence",
+                  desc: "Threat analysis, malware research, OSINT, and advanced cyber defense strategies."
                 },
                 {
-                  name: "Chengjie Li",
-                  role: "Hardware Lead",
-                  email: null,
-                  image: "/lovable-uploads/3de85ddd-15e1-4216-9697-f91abb9a47ce.png"
-                },
-                {
-                  name: "Love Anderberg",
-                  role: "COO",
-                  email: "love@wrlds.com",
-                  image: "/lovable-uploads/a9bb9110-964a-43b0-a5ab-7162140cd133.png"
+                  title: "Cyber Defense",
+                  desc: "Security monitoring, incident response, and protecting digital infrastructures at scale."
                 }
-              ].map((member, i) => (
+              ].map((pillar, i) => (
+
                 <motion.div
                   key={i}
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: i * 0.1 }}
-                  className="group relative overflow-hidden rounded-xl aspect-[3/4]"
+                  whileHover={{ y: -8 }}
+                  className="p-8 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition"
                 >
-                  <img src={member.image} alt={member.name} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 grayscale group-hover:grayscale-0" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 to-transparent flex flex-col justify-end p-6 translate-y-4 group-hover:translate-y-0 transition-transform">
-                    <h3 className="text-xl font-bold text-white">{member.name}</h3>
-                    <p className="text-wrlds-blue text-sm font-bold uppercase tracking-wider">{member.role}</p>
-                    {member.email && (
-                      <a href={`mailto:${member.email}`} className="text-white/70 hover:text-white text-sm mt-1 transition-colors">
-                        {member.email}
-                      </a>
-                    )}
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
-    </PageLayout>
-  );
-};
 
-export default About;
+                  <h3 className="text-2xl font-bold mb-4">
+                    {pillar.title}
+                  </h3>
+
+                  <p className="text-gray-300">
+                    {pillar.desc}
+                  </p>
+
+                </motion.div>
+
+              ))}
+
+            </div>
+
+          </div>
+
+
+          {/* TEAM */}
+
+          <div>
+
+            <h2 className="text-4xl font-bold text-center mb-16">
+              Our <span className="text-wrlds-blue">Cyber Experts</span>
+            </h2>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
+
+              {teams.map((member) => (
+                <TeamCard
+                  key={member.id}
+                  name={member.name}
+                  role={member.role}
+                  description={member.description}
+                  image={member.image}
+                  category={member.category}
+                />
+              ))}
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </PageLayout>
+
+  )
+}
+
+export default About

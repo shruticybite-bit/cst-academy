@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Phone, Mail, MapPin } from "lucide-react";
 import axios from "axios";
+import MapSection from "./MapSection";
 
 const ContactSection = () => {
   const [formData, setFormData] = useState({
@@ -59,7 +60,9 @@ const ContactSection = () => {
   };
 
   return (
+    <>
     <section id="contact" className="py-20 px-4">
+      
       <div className="max-w-6xl mx-auto">
 
         <div className="rounded-3xl overflow-hidden border border-white/10 bg-white/5 backdrop-blur-xl shadow-2xl">
@@ -144,7 +147,7 @@ const ContactSection = () => {
                 </div>
 
                 {/* Subject */}
-                <div>
+                {/* <div>
                   <p className="mb-3 text-white/60">Select Subject?</p>
                   <div className="flex flex-wrap gap-6 text-sm">
                     {["UI/UX Design", "Development", "Cyber Security", "Training", "Digital Marketing"].map((item) => (
@@ -160,7 +163,7 @@ const ContactSection = () => {
                       </label>
                     ))}
                   </div>
-                </div>
+                </div> */}
 
                 {/* Message */}
                 <textarea
@@ -197,7 +200,11 @@ const ContactSection = () => {
           </div>
         </div>
       </div>
+      
     </section>
+    <MapSection />
+    </>
+    
   );
 };
 

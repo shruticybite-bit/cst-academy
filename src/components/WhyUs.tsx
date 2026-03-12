@@ -26,6 +26,11 @@ const reasons = [
         icon: <ShieldCheck className="w-6 h-6 text-wrlds-muted" />,
         title: "Affordable and flexible learning options",
         description: "Affordable and flexible learning options.",
+    },
+     {
+        icon: <Rocket className="w-6 h-6 text-wrlds-muted" />,
+        title: " CST Academy stands apart because we focus on skills, outcomes, and careers.",
+        description: " CST Academy stands apart because we focus on skills, outcomes, and careers.",
     }
 ];
 
@@ -42,9 +47,9 @@ const WhyUs = () => {
                             WHY <span className="text-transparent bg-clip-text bg-gradient-to-r from-wrlds-blue to-white">Learners</span> <br /> Choose CST Academy.
                         </h2>
                     </div>
-                    <p className="hidden md:block text-wrlds-muted max-w-xs text-sm">
+                    {/* <p className="hidden md:block text-wrlds-muted max-w-xs text-sm">
                        CST Academy stands apart because we focus on skills, outcomes, and careers.
-                    </p>
+                    </p> */}
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
