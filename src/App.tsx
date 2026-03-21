@@ -45,7 +45,7 @@ const App = () => {
           <Routes>  
             <Route path="/" element={<Index />} />
             <Route path="/cases" element={<Cases />} />
-            <Route path="/launch" element={<AdminLogin />} />
+            <Route path="/cstom" element={<AdminLogin />} />
             <Route path="/admin" element={<AdminProtectedRoute><AdminLayout /></AdminProtectedRoute>}>
               <Route path="dashboard" element={<AdminDashboard />} />
               <Route path="workshop" element={<AdminWorkshopPage />} />
