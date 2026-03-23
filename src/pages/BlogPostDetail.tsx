@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import PageLayout from "@/components/PageLayout";
 import SEO from "@/components/SEO";
-import EnhancedBlogContent from "@/components/EnhancedBlogContent";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Calendar, User } from "lucide-react";
 import ThreeBackground from "@/components/ThreeBackground";
@@ -19,34 +18,45 @@ const BlogPostDetail = () => {
   const { slug } = useParams();
 
   const [post, setPost] = useState(null);
+  const [blogPosts, setBlogPosts] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // 🔥 Fetch single blog by slug
   useEffect(() => {
-  const fetchPost = async () => {
-    try {
-      const res = await axios.get(
-        `https://cst-acadmay-backend.onrender.com/api/services/detail/${slug}`
-      );
+    const fetchData = async () => {
+      try {
+        // ✅ Detail API (slug)
+        const detailRes = await axios.get(
+          `https://cst-acadmay-backend.onrender.com/api/services/detail/${slug}`
+        );
 
-      console.log("API RESPONSE:", res.data); // Debug
+        const currentPost = detailRes.data.data;
+        setPost(currentPost);
 
-      // ✅ Important Fix
-      setPost(res.data.data);
+        // ✅ Blog List API (sidebar)
+        const listRes = await axios.get(
+          "https://cst-acadmay-backend.onrender.com/api/services/blogs"
+        );
 
-    } catch (error) {
-      console.error("Error fetching blog:", error);
-      setPost(null);
-    } finally {
-      setLoading(false);
-    }
-  };
+        const sorted = listRes.data.sort(
+          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+        );
 
-  if (slug) {
-    fetchPost();
-  }
-}, [slug]);
+        const filtered = sorted.filter(
+          (item) => item.slug !== slug
+        );
 
+        setBlogPosts(filtered.slice(0, 5));
+      } catch (error) {
+        console.error("Error:", error);
+        setPost(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (slug) fetchData();
+  }, [slug]);
+console.log('blogPosts=',blogPosts);
   if (loading) {
     return (
       <PageLayout>
@@ -90,7 +100,7 @@ const BlogPostDetail = () => {
             ? new Date(post.createdAt).toISOString()
             : undefined
         }
-        author={post.author || "WRLDS Team"}
+        author={post.author || ""}
         category={post.category}
       />
 
@@ -102,80 +112,119 @@ const BlogPostDetail = () => {
       </div>
 
       <article className="relative z-10 w-full">
-        {/* Hero Section */}
+        {/* HERO */}
         <div className="relative min-h-[70vh] flex items-center overflow-hidden">
           {post.imageUrl && (
-  <div className="absolute inset-0">
-    <img
-      src={post.imageUrl}
-      alt={post.title}
-      className="absolute inset-0 w-full h-full object-cover"
-    />
-    <div className="absolute inset-0 bg-black/50"></div>
-  </div>
-)}
+            <div className="absolute inset-0">
+              <img
+                src={post.imageUrl}
+                alt={post.title}
+                className="absolute inset-0 w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-black/50"></div>
+            </div>
+          )}
 
           <div className="relative z-10 container mx-auto px-6 pt-32 pb-16">
             <div className="max-w-4xl">
               <Link
                 to="/blog"
-                className="inline-flex items-center text-white/60 hover:text-white mb-8 transition-colors text-sm font-medium group"
+                className="inline-flex items-center text-white/60 hover:text-white mb-8"
               >
-                <ArrowLeft className="mr-2 h-4 w-4 transition-transform group-hover:-translate-x-1" />
+                <ArrowLeft className="mr-2 h-4 w-4" />
                 Back to Blog
               </Link>
 
-              {/* Category */}
               {post.category && (
-                <div className="mb-6">
-                  <span className="inline-block px-4 py-1.5 bg-wrlds-blue/20 text-wrlds-blue rounded-full text-xs font-semibold uppercase tracking-wider border border-wrlds-blue/30">
-                    {post.category}
-                  </span>
-                </div>
+                <span className="inline-block px-4 py-1.5 bg-wrlds-blue/20 text-wrlds-blue rounded-full text-xs mb-4">
+                  {post.category}
+                </span>
               )}
 
-              {/* Title */}
-              <h1 className="text-3xl md:text-5xl font-bold text-white mb-6 leading-tight">
+              <h1 className="text-3xl md:text-5xl font-bold text-white mb-6">
                 {post.title}
               </h1>
 
-              {/* Excerpt (HTML safe render) */}
               {post.excerpt && (
                 <div
-                  className="text-lg text-white/70 mb-8"
+                  className="text-lg text-white/70 mb-6"
                   dangerouslySetInnerHTML={{ __html: post.excerpt }}
                 />
               )}
 
-              {/* Meta */}
-              <div className="flex flex-wrap items-center gap-6 text-white/50 text-sm">
-                {post.createdAt && (
-                  <div className="flex items-center gap-2">
-                    <Calendar className="h-4 w-4" />
-                    <span>
-                      {new Date(post.createdAt).toLocaleDateString()}
-                    </span>
-                  </div>
-                )}
+              <div className="flex gap-6 text-white/50 text-sm">
+                <span className="flex items-center gap-2">
+                  <Calendar className="h-4 w-4" />
+                  {new Date(post.createdAt).toLocaleDateString()}
+                </span>
 
-                <div className="flex items-center gap-2">
+                <span className="flex items-center gap-2">
                   <User className="h-4 w-4" />
-                  <span>{post.author || "WRLDS Team"}</span>
-                </div>
+                  {post.author || ""}
+                </span>
               </div>
             </div>
           </div>
-
-          <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-wrlds-dark to-transparent"></div>
         </div>
 
-        {/* Full Content */}
+        {/* CONTENT + SIDEBAR */}
         <div className="container mx-auto px-6 py-16">
-          <div className="max-w-3xl mx-auto">
-            <div
-  className="prose prose-invert max-w-none"
-  dangerouslySetInnerHTML={{ __html: post.content }}
-/>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+
+            {/* LEFT */}
+            <div className="lg:col-span-2">
+              <div
+                className="prose prose-invert max-w-none"
+                dangerouslySetInnerHTML={{ __html: post.content }}
+              />
+            </div>
+
+            {/* RIGHT SIDEBAR */}
+            <div className="lg:col-span-1 sticky top-24 h-fit">
+              <h3 className="text-xl font-semibold text-white mb-6">
+                Latest Blogs
+              </h3>
+
+              <div className="space-y-6">
+                {blogPosts.map((item) => (
+                  <Link to={`/blog/${item.slug}`} key={item._id}>
+                    <div className="flex gap-4 bg-white/5 hover:bg-white/10 transition p-3 rounded-lg">
+
+                      {/* IMAGE */}
+                      <img
+                        src={item.imageUrl}
+                        alt={item.title}
+                        className="w-20 h-20 object-cover rounded-md"
+                      />
+
+                      {/* TEXT */}
+                      <div className="flex flex-col justify-between">
+
+                        <h4 className="text-white text-sm font-semibold line-clamp-2">
+                          {item.title}
+                        </h4>
+
+                        <p className="text-gray-400 text-xs line-clamp-2">
+                          {item.excerpt?.replace(/<[^>]+>/g, "")}
+                        </p>
+
+                        <span className="text-gray-500 text-xs">
+                          {new Date(item.createdAt).toLocaleDateString()}
+                        </span>
+
+                      </div>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+
+              {blogPosts.length === 0 && (
+                <div className="text-gray-400 text-center">
+                  No blogs available
+                </div>
+              )}
+            </div>
+
           </div>
         </div>
       </article>
