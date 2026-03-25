@@ -28,7 +28,7 @@ const TeamCard = ({ name, role, description, image, category }: TeamCardProps) =
 
       {/* Image */}
 
-      <div className="relative aspect-[4/3] overflow-hidden">
+      {/* <div className="relative aspect-[4/3] overflow-hidden">
 
         <img
           src={image}
@@ -40,7 +40,14 @@ const TeamCard = ({ name, role, description, image, category }: TeamCardProps) =
           {category}
         </span>
 
-      </div>
+      </div> */}
+      <div className="relative h-61 overflow-hidden">
+  <img
+    src={image}
+    alt={name}
+    className="w-full h-full object-cover object-center top-5"
+  />
+</div>
 
       {/* Info */}
 
@@ -80,21 +87,21 @@ const About = () => {
   const teams = [
     {
       id: 1,
-      name: "Rahul Sharma",
-      role: "Cyber Security Trainer",
+      name: "Abhishek Sharma",
+      role: "Co-Founder",
       description:
         "Specializes in ethical hacking, penetration testing and cybersecurity training.",
-      image: "/teams/1.jfif",
-      category: "Cybersecurity"
+      image: "/teams/om-prkash.jpeg",
+      // category: "Cybersecurity"
     },
     {
       id: 2,
-      name: "Amit Verma",
-      role: "Ethical Hacker",
+      name: "Keshav Garg",
+      role: "Founder",
       description:
         "Focused on vulnerability assessment and real-world attack simulations.",
-      image: "/teams/2.jfif",
-      category: "Tools"
+      image: "/public/teams/2.jpg",
+      // category: "Tools"
     },
     // {
     //   id: 3,

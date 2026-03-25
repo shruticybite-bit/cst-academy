@@ -151,7 +151,7 @@ const ContactSection = () => {
 
                   <div className="flex items-center gap-4">
                     <Mail className="w-5 h-5 text-wrlds-blue" />
-                    academy.codesec@gmail.com
+                    academy.codesec@gmail.com, <br/>info@cstacademy.in
                   </div>
 
                   <div className="flex items-start gap-4">
@@ -159,7 +159,7 @@ const ContactSection = () => {
                     <span>
                       207, 5th floor, Sunrise tower, Above Samarpan Jwellers,
                       <br />
-                      MG Road, Indore, MP, 452003
+                      MG Road ,  Indore , M. P. - 452003
                     </span>
                   </div>
 

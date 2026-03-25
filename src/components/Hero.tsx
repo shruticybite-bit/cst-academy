@@ -42,7 +42,7 @@ Train on real tools, learn from experienced security professionals, and become j
           className="flex flex-col sm:flex-row items-center gap-6 pointer-events-auto"
         >
           <a
-            href="#contact"
+            href="#services"
             className="group relative px-10 py-5 bg-white text-black font-bold text-lg rounded-full overflow-hidden transition-all duration-300 hover:scale-105 hover:bg-wrlds-blue hover:text-white shadow-[0_0_40px_rgba(255,255,255,0.3)] hover:shadow-[0_0_60px_rgba(0,102,204,0.6)]"
           >
             <span className="relative flex items-center gap-3">
@@ -50,12 +50,14 @@ Train on real tools, learn from experienced security professionals, and become j
             </span>
           </a>
           <a
-            href="#projects"
+            href="#contact"
             className="group px-10 py-5 bg-white/15 border border-white/30 text-white font-semibold text-lg rounded-full hover:bg-white/25 transition-all duration-300 flex items-center gap-2"
-            onClick={(e) => {
-              e.preventDefault();
-              document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' });
-            }}
+           onClick={(e) => {
+            e.preventDefault();
+            document.getElementById('contact')?.scrollIntoView({
+              behavior: 'smooth',
+            });
+          }}
           >
             Book Free Career
           </a>
@@ -72,7 +74,7 @@ Train on real tools, learn from experienced security professionals, and become j
       </div>
 
       {/* Visual Bridge Gradient */}
-      <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-wrlds-dark to-transparent z-20 pointer-events-none"></div>
+      <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-wrlds-dark to-transparent z-20 pointer-events-auto"></div>
     </section>
   );
 };
