@@ -100,7 +100,7 @@ const About = () => {
       role: "Founder",
       description:
         "Focused on vulnerability assessment and real-world attack simulations.",
-      image: "/public/teams/2.jpg",
+      image: "/teams/2.jpg",
       // category: "Tools"
     },
     // {
