@@ -90,7 +90,7 @@ const About = () => {
       name: "Abhishek Sharma",
       role: "Co-Founder",
       description:
-        "Specializes in ethical hacking, penetration testing and cybersecurity training.",
+        "Security Researcher | Ethical Hacker.",
       image: "/teams/om-prkash.jpeg",
       // category: "Cybersecurity"
     },
@@ -99,7 +99,7 @@ const About = () => {
       name: "Keshav Garg",
       role: "Founder",
       description:
-        "Focused on vulnerability assessment and real-world attack simulations.",
+        "Security Researcher | Ethical Hacker.",
       image: "/teams/2.jpg",
       // category: "Tools"
     },
