@@ -20,51 +20,57 @@ const WorkshopPopup = ({ isOpen, onClose }) => {
 
   /* ================= FETCH CMS ================= */
 
-  useEffect(() => {
+  const fetchCMS = async () => {
+    try {
+      const res = await axios.get(
+        "https://cst-acadmay-backend.onrender.com/api/cms-popup"
+      );
 
-    const fetchCMS = async () => {
-
-      try {
-
-        const res = await axios.get(
-          "https://cst-acadmay-backend.onrender.com/api/cms-popup"
-        );
-
-        if (res.data.success && res.data.data) {
-
-          const data = res.data.data;
-
-          const totalSeconds =
-            Number(data.hours) * 3600 +
-            Number(data.minutes) * 60 +
-            Number(data.seconds);
-
-          setElapsedSeconds(totalSeconds);
-          setCmsData(data);
-
-        }
-
-      } catch (error) {
-
-        console.log("CMS Fetch Error:", error);
-
+      if (res.data.success && res.data.data) {
+        setCmsData(res.data.data);
       }
+    } catch (error) {
+      console.log("CMS Fetch Error:", error);
+    }
+  };
 
-    };
-
+  useEffect(() => {
     fetchCMS();
-
   }, []);
 
-  /* ================= TIMER ================= */
+  /* ================= REAL TIME TIMER ================= */
 
   useEffect(() => {
-
     if (!isOpen || !cmsData?.enabled) return;
 
     const interval = setInterval(() => {
+      const now = new Date();
 
-      setElapsedSeconds((prev) => (prev > 0 ? prev - 1 : 0));
+      const target = new Date();
+      target.setHours(Number(cmsData.hours));
+      target.setMinutes(Number(cmsData.minutes));
+      target.setSeconds(Number(cmsData.seconds));
+      target.setMilliseconds(0);
+
+      // 👉 if today's time passed → next day
+      if (target <= now) {
+        target.setDate(target.getDate() + 1);
+      }
+
+      const diff = Math.max(0, Math.floor((target - now) / 1000));
+
+      setElapsedSeconds(diff);
+
+      // ✅ जब timer खत्म हो जाए
+      if (diff === 0) {
+        clearInterval(interval);
+
+        // 👉 popup auto close
+        onClose();
+
+        // 👉 optional: CMS दुबारा fetch (next cycle)
+        fetchCMS();
+      }
 
     }, 1000);
 
@@ -75,18 +81,17 @@ const WorkshopPopup = ({ isOpen, onClose }) => {
   /* ================= SCROLL LOCK ================= */
 
   useEffect(() => {
-
     const shouldLockScroll = isOpen && cmsData?.enabled;
-
     document.body.style.overflow = shouldLockScroll ? "hidden" : "auto";
 
     return () => {
       document.body.style.overflow = "auto";
     };
-
   }, [isOpen, cmsData]);
 
   if (!isOpen || !cmsData?.enabled) return null;
+
+  /* ================= TIME FORMAT ================= */
 
   const hours = String(Math.floor(elapsedSeconds / 3600)).padStart(2, "0");
   const minutes = String(Math.floor((elapsedSeconds % 3600) / 60)).padStart(2, "0");
@@ -95,7 +100,6 @@ const WorkshopPopup = ({ isOpen, onClose }) => {
   /* ================= VALIDATION ================= */
 
   const validate = () => {
-
     let newErrors = {};
 
     if (!formData.firstName.trim()) {
@@ -106,8 +110,7 @@ const WorkshopPopup = ({ isOpen, onClose }) => {
 
     if (!formData.email.trim()) {
       newErrors.email = "Email is required";
-    }
-    else if (!emailRegex.test(formData.email)) {
+    } else if (!emailRegex.test(formData.email)) {
       newErrors.email = "Only Gmail allowed (example@gmail.com)";
     }
 
@@ -116,43 +119,26 @@ const WorkshopPopup = ({ isOpen, onClose }) => {
     }
 
     setErrors(newErrors);
-
     return Object.keys(newErrors).length === 0;
-
   };
 
-  /* ================= INPUT CHANGE ================= */
+  /* ================= INPUT ================= */
 
   const handleChange = (e) => {
-
     const { name, value } = e.target;
 
-    if (name === "phone") {
+    if (name === "phone" && !/^\d*$/.test(value)) return;
 
-      if (!/^\d*$/.test(value)) return;
-
-    }
-
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-
-    setErrors({
-      ...errors,
-      [name]: "",
-    });
-
+    setFormData({ ...formData, [name]: value });
+    setErrors({ ...errors, [name]: "" });
   };
 
   /* ================= SUBMIT ================= */
 
   const handleSubmit = async () => {
-
     if (!validate()) return;
 
     try {
-
       setLoading(true);
 
       const res = await axios.post(
@@ -161,7 +147,6 @@ const WorkshopPopup = ({ isOpen, onClose }) => {
       );
 
       if (res.data.success) {
-
         toast.success("Registration Successful 🎉");
 
         setIsSubmitted(true);
@@ -172,33 +157,20 @@ const WorkshopPopup = ({ isOpen, onClose }) => {
           phone: "",
           email: "",
         });
-
       } else {
-
         toast.error("Something went wrong");
-
       }
-
     } catch (error) {
-
       console.log(error);
-
       toast.error("Registration Failed ❌");
-
     } finally {
-
       setLoading(false);
-
     }
-
   };
 
   return (
-
     <div className="fixed inset-0 z-[9999] bg-black/80 backdrop-blur-md overflow-y-auto">
-
       <div className="min-h-screen w-full flex justify-center px-3 py-6">
-
         <div className="relative w-full max-w-5xl bg-gradient-to-br from-[#0f172a] to-[#111827] rounded-3xl shadow-2xl border border-blue-500/20 grid grid-cols-1 lg:grid-cols-2 overflow-hidden my-auto">
 
           <button
@@ -209,51 +181,37 @@ const WorkshopPopup = ({ isOpen, onClose }) => {
           </button>
 
           {/* LEFT */}
-
           <div className="p-6 sm:p-8">
-
             <h2 className="text-2xl sm:text-3xl font-bold text-white">
               {cmsData.title}
             </h2>
 
             {cmsData.image && (
-
               <div className="mt-6 bg-[#020617] border border-blue-500/20 rounded-xl p-6 flex justify-center">
-
                 <img
                   src={cmsData.image}
                   alt="Workshop"
                   className="max-h-40 object-contain"
                 />
-
               </div>
-
             )}
 
             <div className="mt-6">
-
               <div className="bg-blue-600/20 border border-blue-500 px-6 py-3 rounded-xl text-xl font-bold text-blue-400 tracking-widest text-center">
-
                 {hours} : {minutes} : {seconds}
-
               </div>
-
             </div>
 
             <p className="mt-6 text-gray-400 whitespace-pre-line">
               {cmsData.description}
             </p>
-
           </div>
 
           {/* RIGHT */}
-
           <div className="bg-[#0b1220] p-6 sm:p-8 flex items-center justify-center">
 
             {!isSubmitted ? (
-
               <div className="w-full">
-
                 <h3 className="text-xl font-semibold text-white mb-6">
                   Register Now
                 </h3>
@@ -318,13 +276,9 @@ const WorkshopPopup = ({ isOpen, onClose }) => {
                   </button>
 
                 </div>
-
               </div>
-
             ) : (
-
               <div className="text-center space-y-6">
-
                 <div className="w-20 h-20 mx-auto rounded-full bg-green-500/20 flex items-center justify-center text-4xl">
                   ✅
                 </div>
@@ -335,7 +289,6 @@ const WorkshopPopup = ({ isOpen, onClose }) => {
 
                 <p className="text-gray-400 max-w-sm mx-auto">
                   Your registration has been successfully submitted.
-                  Our team will contact you soon with CST Academy details.
                 </p>
 
                 <button
@@ -344,21 +297,14 @@ const WorkshopPopup = ({ isOpen, onClose }) => {
                 >
                   Close
                 </button>
-
               </div>
-
             )}
 
           </div>
-
         </div>
-
       </div>
-
     </div>
-
   );
-
 };
 
 export default WorkshopPopup;

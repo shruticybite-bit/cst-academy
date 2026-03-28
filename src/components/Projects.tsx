@@ -137,7 +137,7 @@ const Projects = () => {
               <ChevronRight />
             </button>
 
-            <Link to="/case-studies" className="text-wrlds-blue">
+            <Link to="/cases" className="text-wrlds-blue">
               View All →
             </Link>
           </div>
@@ -165,16 +165,19 @@ const Projects = () => {
         onPointerLeave={endDrag}
       >
         {cases.map((item) => (
-          <div
+           <Link
             key={item._id}
-            className="min-w-[300px] md:min-w-[500px] relative rounded-2xl overflow-hidden"
+            to={`/case-study/${item.slug}`}
+            className="group relative min-w-[300px] md:min-w-[500px] aspect-[4/3] rounded-2xl overflow-hidden bg-white/5 border border-white/10 hover:border-wrlds-blue/50 transition"
           >
+            {/* IMAGE */}
             <img
               src={item.imageUrl}
               alt={item.title}
-              className="w-full h-[300px] object-cover"
+              className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
             />
 
+            {/* OVERLAY */}
             <div className="absolute inset-0 bg-black/50 p-4 flex flex-col justify-end">
               <span className="text-xs text-blue-400 mb-1">
                 {item.category}
@@ -184,24 +187,20 @@ const Projects = () => {
                 {item.title}
               </h3>
 
-              <Link
-                to={`/case-study/${item.slug}`}
-                className="text-white mt-2 flex items-center gap-2"
-                onClick={(e) => hasDraggedRef.current && e.preventDefault()}
-              >
+              <span className="text-white mt-2 flex items-center gap-2">
                 View Case Study <ArrowRight size={16} />
-              </Link>
+              </span>
             </div>
-          </div>
+          </Link>
         ))}
 
         {/* View All Card */}
-        <Link
+        {/* <Link
           to="/cases"
           className="min-w-[250px] flex items-center justify-center bg-wrlds-blue text-white rounded-xl"
         >
           View All →
-        </Link>
+        </Link> */}
       </div>
     </section>
   );
