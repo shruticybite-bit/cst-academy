@@ -153,16 +153,17 @@ const ServiceForm = ({ existingData, onSuccess }) => {
 
       {/* TYPE */}
       <select
-        name="type"
-        value={formData.type}
-        onChange={handleChange}
-        className="w-full border p-3 rounded-lg"
-      >
-        <option value="">Select Type</option>
-        <option value="blog">Blog</option>
-        <option value="course">Course</option>
-        <option value="article">Articles</option>
-      </select>
+  name="type"
+  value={formData.type}
+  onChange={handleChange}
+  className="w-full border p-3 rounded-lg"
+>
+  <option value="">Select Type</option>
+  <option value="blog">Blog</option>
+  <option value="course">Course</option>
+  <option value="article">Articles</option>
+  <option value="case_study">Case Study</option> {/* ✅ FIXED */}
+</select>
       {errors.type && <p className="text-red-500 text-sm">{errors.type}</p>}
 
       {/* TITLE */}

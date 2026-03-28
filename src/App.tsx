@@ -1,9 +1,8 @@
-import { HashRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useState } from "react";
 import Index from "./pages/Index";
 import MainContact from "./components/MainContact";
@@ -17,6 +16,8 @@ import Blog from "./pages/Blog";
 import BlogPostDetail from "./pages/BlogPostDetail";
 import CoursePostDetail from "./pages/CoursePostDetail";
 import Cases from "./pages/Cases";
+import CaseStudyDetail from "./pages/CaseStudyDetail";
+
 import Services from "./pages/Services";
 import Preloader from "./components/Preloader";
 import Cursor from "./components/Cursor";
@@ -41,10 +42,11 @@ const App = () => {
       <TooltipProvider>
         <Toaster />
         <Sonner /> 
-        <HashRouter> 
+        <BrowserRouter> 
           <Routes>  
             <Route path="/" element={<Index />} />
             <Route path="/cases" element={<Cases />} />
+            <Route path="/case-study/:slug" element={<CaseStudyDetail />} />
             <Route path="/cstom" element={<AdminLogin />} />
             <Route path="/admin" element={<AdminProtectedRoute><AdminLayout /></AdminProtectedRoute>}>
               <Route path="dashboard" element={<AdminDashboard />} />
@@ -65,7 +67,7 @@ const App = () => {
             <Route path="/course-detail/:slug" element={<CoursePostDetail />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
-        </HashRouter>
+        </BrowserRouter>
       </TooltipProvider>
     </QueryClientProvider>
   );
