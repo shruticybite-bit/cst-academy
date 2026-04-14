@@ -1,9 +1,17 @@
-
 User-agent: *
+
+# Allow all important content
 Allow: /
 
-# Sitemap location
-Sitemap: https://wrlds.com/sitemap.xml
+# Block unnecessary or sensitive routes (if any exist)
+Disallow: /admin
+Disallow: /login
+Disallow: /dashboard
+Disallow: /private
 
-# Optimize crawling
-Crawl-delay: 10
+# Optional: block search/query URLs (if implemented)
+Disallow: /*?s=
+Disallow: /search
+
+# Sitemap
+Sitemap: https://cstacademy.in/sitemap.xml
