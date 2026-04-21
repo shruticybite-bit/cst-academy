@@ -41,36 +41,43 @@ const WorkshopPopup = ({ isOpen, onClose }) => {
   }, [isOpen]);
 
   /* ================= TIMER ================= */
-  useEffect(() => {
-    if (!isOpen || !cmsData?.enabled) return;
+useEffect(() => {
+  if (!isOpen || !cmsData?.enabled) return;
 
-    const interval = setInterval(() => {
-      const now = new Date();
-      let target;
+  const interval = setInterval(() => {
+    const now = new Date();
 
-      if (cmsData?.date) {
-        target = new Date(
-          `${cmsData.date}T${cmsData.hours}:${cmsData.minutes}:${cmsData.seconds}`
-        );
-      } else {
-        target = new Date();
-        target.setHours(Number(cmsData?.hours || 0));
-        target.setMinutes(Number(cmsData?.minutes || 0));
-        target.setSeconds(Number(cmsData?.seconds || 0));
-      }
+    let target;
 
-      const diff = Math.max(0, Math.floor((target - now) / 1000));
-      setRemainingSeconds(diff);
+    if (cmsData?.date) {
+      // ✅ अगर date backend से है
+      target = new Date(
+        `${cmsData.date}T${cmsData.hours}:${cmsData.minutes}:${cmsData.seconds}`
+      );
+    } else {
+      // ✅ same day time
+      target = new Date();
 
-      if (diff === 0) {
-        clearInterval(interval);
-        setRemainingSeconds(0);
-      }
-    }, 1000);
+      target.setHours(Number(cmsData?.hours || 0));
+      target.setMinutes(Number(cmsData?.minutes || 0));
+      target.setSeconds(Number(cmsData?.seconds || 0));
+      target.setMilliseconds(0);
+    }
 
-    return () => clearInterval(interval);
-  }, [isOpen, cmsData]);
+    let diff = Math.floor((target.getTime() - now.getTime()) / 1000);
 
+    // ✅ अगर time निकल गया
+    if (diff <= 0) {
+      setRemainingSeconds(0);
+      clearInterval(interval);
+      return;
+    }
+
+    setRemainingSeconds(diff);
+  }, 1000);
+
+  return () => clearInterval(interval);
+}, [isOpen, cmsData]);
   if (!isOpen || !cmsData?.enabled) return null;
 
   /* ================= TIME ================= */
