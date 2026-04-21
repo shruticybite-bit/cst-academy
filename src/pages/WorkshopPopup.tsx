@@ -3,9 +3,8 @@ import axios from "axios";
 import { toast } from "sonner";
 
 const WorkshopPopup = ({ isOpen, onClose }) => {
-
   const [cmsData, setCmsData] = useState(null);
-  const [elapsedSeconds, setElapsedSeconds] = useState(0);
+  const [remainingSeconds, setRemainingSeconds] = useState(0);
   const [loading, setLoading] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
@@ -19,45 +18,34 @@ const WorkshopPopup = ({ isOpen, onClose }) => {
   const [errors, setErrors] = useState({});
 
   /* ================= FETCH CMS ================= */
-
-  const fetchCMS = async () => {
-    try {
-      const res = await axios.get(
-        "https://cst-acadmay-backend.onrender.com/api/cms-popup"
-      );
-
-      if (res.data.success && res.data.data) {
-        setCmsData(res.data.data);
-      }
-    } catch (error) {
-      console.log("CMS Fetch Error:", error);
-    }
-  };
-
   useEffect(() => {
+    const fetchCMS = async () => {
+      try {
+        const res = await axios.get(
+          "https://cst-acadmay-backend.onrender.com/api/cms-popup"
+        );
+        if (res?.data?.success && res?.data?.data) {
+          setCmsData(res.data.data);
+        }
+      } catch (err) {
+        console.log("CMS Error:", err);
+      }
+    };
     fetchCMS();
   }, []);
 
-  /* ================= DATE CHECK ================= */
+  /* ================= SCROLL ================= */
+  useEffect(() => {
+    document.body.style.overflow = isOpen ? "hidden" : "auto";
+    return () => (document.body.style.overflow = "auto");
+  }, [isOpen]);
 
-  const today = new Date().toISOString().split("T")[0];
-
-  // 👉 अगर date है और match नहीं कर रही → popup hide
-  if (cmsData?.date && cmsData.date !== today) return null;
-
-  // 👉 अगर same day पहले close हो चुका है
-  const closedDate = localStorage.getItem("popupClosedDate");
-  if (closedDate === today) return null;
-
-  /* ================= REAL TIME TIMER ================= */
-
+  /* ================= TIMER ================= */
   useEffect(() => {
     if (!isOpen || !cmsData?.enabled) return;
 
     const interval = setInterval(() => {
       const now = new Date();
-
-      // 👉 SAFE TARGET (date हो या न हो दोनों case handle)
       let target;
 
       if (cmsData?.date) {
@@ -66,87 +54,64 @@ const WorkshopPopup = ({ isOpen, onClose }) => {
         );
       } else {
         target = new Date();
-        target.setHours(Number(cmsData.hours));
-        target.setMinutes(Number(cmsData.minutes));
-        target.setSeconds(Number(cmsData.seconds));
+        target.setHours(Number(cmsData?.hours || 0));
+        target.setMinutes(Number(cmsData?.minutes || 0));
+        target.setSeconds(Number(cmsData?.seconds || 0));
       }
 
       const diff = Math.max(0, Math.floor((target - now) / 1000));
+      setRemainingSeconds(diff);
 
-      setElapsedSeconds(diff);
-
-      // ✅ timer खत्म
       if (diff === 0) {
         clearInterval(interval);
-        onClose();
-
-        // 👉 same day दुबारा ना आए
-        localStorage.setItem("popupClosedDate", today);
+        setRemainingSeconds(0);
       }
-
     }, 1000);
 
     return () => clearInterval(interval);
-
-  }, [isOpen, cmsData]);
-
-  /* ================= SCROLL LOCK ================= */
-
-  useEffect(() => {
-    const shouldLockScroll = isOpen && cmsData?.enabled;
-    document.body.style.overflow = shouldLockScroll ? "hidden" : "auto";
-
-    return () => {
-      document.body.style.overflow = "auto";
-    };
   }, [isOpen, cmsData]);
 
   if (!isOpen || !cmsData?.enabled) return null;
 
-  /* ================= TIME FORMAT ================= */
-
-  const hours = String(Math.floor(elapsedSeconds / 3600)).padStart(2, "0");
-  const minutes = String(Math.floor((elapsedSeconds % 3600) / 60)).padStart(2, "0");
-  const seconds = String(elapsedSeconds % 60).padStart(2, "0");
+  /* ================= TIME ================= */
+  const hours = String(Math.floor(remainingSeconds / 3600)).padStart(2, "0");
+  const minutes = String(Math.floor((remainingSeconds % 3600) / 60)).padStart(2, "0");
+  const seconds = String(remainingSeconds % 60).padStart(2, "0");
 
   /* ================= VALIDATION ================= */
-
   const validate = () => {
-    let newErrors = {};
+    let err = {};
 
-    if (!formData.firstName.trim()) {
-      newErrors.firstName = "First name is required";
-    }
-
-    const emailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+    if (!formData.firstName.trim()) err.firstName = "First name required";
+    if (!formData.lastName.trim()) err.lastName = "Last name required";
 
     if (!formData.email.trim()) {
-      newErrors.email = "Email is required";
-    } else if (!emailRegex.test(formData.email)) {
-      newErrors.email = "Only Gmail allowed";
+      err.email = "Email required";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      err.email = "Invalid email";
     }
 
-    if (formData.phone && !/^[0-9]{10}$/.test(formData.phone)) {
-      newErrors.phone = "Phone must be 10 digits";
+    if (!formData.phone) {
+      err.phone = "Phone required";
+    } else if (!/^[0-9]{10}$/.test(formData.phone)) {
+      err.phone = "Phone must be 10 digits";
     }
 
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    setErrors(err);
+    return Object.keys(err).length === 0;
   };
 
   /* ================= INPUT ================= */
-
   const handleChange = (e) => {
     const { name, value } = e.target;
 
     if (name === "phone" && !/^\d*$/.test(value)) return;
 
-    setFormData({ ...formData, [name]: value });
-    setErrors({ ...errors, [name]: "" });
+    setFormData((prev) => ({ ...prev, [name]: value }));
+    setErrors((prev) => ({ ...prev, [name]: "" }));
   };
 
   /* ================= SUBMIT ================= */
-
   const handleSubmit = async () => {
     if (!validate()) return;
 
@@ -158,12 +123,9 @@ const WorkshopPopup = ({ isOpen, onClose }) => {
         formData
       );
 
-      if (res.data.success) {
+      if (res?.data?.success) {
         toast.success("Registration Successful 🎉");
-        localStorage.setItem("popupRegistered", "true");
-
         setIsSubmitted(true);
-
         setFormData({
           firstName: "",
           lastName: "",
@@ -171,149 +133,96 @@ const WorkshopPopup = ({ isOpen, onClose }) => {
           email: "",
         });
       } else {
-        toast.error("Something went wrong");
+        toast.error(res?.data?.message || "Something went wrong");
       }
     } catch (error) {
-      console.log(error);
-      toast.error("Registration Failed ❌");
+      if (error.response?.data?.errors) {
+        setErrors(error.response.data.errors);
+      } else {
+        toast.error("Registration failed ❌");
+      }
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="fixed inset-0 z-[9999] bg-black/80 backdrop-blur-md overflow-y-auto">
-      <div className="min-h-screen w-full flex justify-center px-3 py-6">
-        <div className="relative w-full max-w-5xl bg-gradient-to-br from-[#0f172a] to-[#111827] rounded-3xl shadow-2xl border border-blue-500/20 grid grid-cols-1 lg:grid-cols-2 overflow-hidden my-auto">
+    <div className="fixed inset-0 z-[9999] bg-black/80 backdrop-blur-md">
+      <div className="min-h-screen flex justify-center items-center px-3">
+        <div className="relative w-full max-w-5xl bg-gradient-to-br from-[#0f172a] to-[#020617] rounded-3xl shadow-2xl border border-blue-500/20 grid lg:grid-cols-2 overflow-hidden">
 
-          <button
-            onClick={onClose}
-            className="absolute top-4 right-4 text-gray-400 hover:text-white text-xl z-20"
-          >
-            ✕
-          </button>
+          {/* HEADER (FIXED CLOSE BUTTON) */}
+          <div className="absolute top-0 left-0 w-full flex justify-end p-4 z-50">
+            <button
+              onClick={onClose}
+              className="text-gray-400 hover:text-white text-2xl"
+            >
+              ✕
+            </button>
+          </div>
 
           {/* LEFT */}
-          <div className="p-6 sm:p-8">
-            <h2 className="text-2xl sm:text-3xl font-bold text-white">
-              {cmsData.title}
+          <div className="p-6 pt-10">
+            <h2 className="text-2xl text-white font-bold">
+              {cmsData?.title}
             </h2>
 
-            {cmsData.image && (
-              <div className="mt-6 bg-[#020617] border border-blue-500/20 rounded-xl p-6 flex justify-center">
+            {/* IMAGE */}
+            {cmsData?.image && (
+              <div className="mt-6 flex justify-center">
                 <img
                   src={cmsData.image}
                   alt="Workshop"
-                  className="max-h-40 object-contain"
+                  className="max-h-44 object-cover rounded-xl shadow-lg"
+                  onError={(e) => (e.target.style.display = "none")}
                 />
               </div>
             )}
 
-            <div className="mt-6">
-              <div className="bg-blue-600/20 border border-blue-500 px-6 py-3 rounded-xl text-xl font-bold text-blue-400 tracking-widest text-center">
+            {/* TIMER */}
+            <div className="mt-6 flex justify-center">
+              <div className="bg-gradient-to-r from-blue-600 to-indigo-600 px-6 py-3 rounded-xl text-xl font-bold text-white tracking-widest shadow-lg">
                 {hours} : {minutes} : {seconds}
               </div>
             </div>
 
-            <p className="mt-6 text-gray-400 whitespace-pre-line">
-              {cmsData.description}
+            {/* DESC */}
+            <p className="text-gray-400 mt-6 text-sm leading-relaxed">
+              {cmsData?.description}
             </p>
           </div>
 
           {/* RIGHT */}
-          <div className="bg-[#0b1220] p-6 sm:p-8 flex items-center justify-center">
-
+          <div className="p-6 pt-12 bg-[#020617]">
             {!isSubmitted ? (
-              <div className="w-full">
-                <h3 className="text-xl font-semibold text-white mb-6">
-                  Register Now
-                </h3>
+              <>
+                <input name="firstName" placeholder="First Name *" value={formData.firstName} onChange={handleChange} className="w-full mb-2 p-3 rounded-xl bg-[#1f2937] border border-gray-700 text-white focus:border-blue-500 outline-none" />
+                {errors.firstName && <p className="text-red-400 text-xs">{errors.firstName}</p>}
 
-                <div className="space-y-4">
+                <input name="lastName" placeholder="Last Name *" value={formData.lastName} onChange={handleChange} className="w-full mb-2 p-3 rounded-xl bg-[#1f2937] border border-gray-700 text-white" />
+                {errors.lastName && <p className="text-red-400 text-xs">{errors.lastName}</p>}
 
-                  <input
-                    type="text"
-                    name="firstName"
-                    value={formData.firstName}
-                    onChange={handleChange}
-                    placeholder="First Name *"
-                    className="w-full bg-[#1f2937] border border-gray-700 rounded-xl px-4 py-3 text-white"
-                  />
+                <input name="phone" placeholder="Phone *" maxLength={10} value={formData.phone} onChange={handleChange} className="w-full mb-2 p-3 rounded-xl bg-[#1f2937] border border-gray-700 text-white" />
+                {errors.phone && <p className="text-red-400 text-xs">{errors.phone}</p>}
 
-                  {errors.firstName && (
-                    <p className="text-red-400 text-sm">{errors.firstName}</p>
-                  )}
+                <input name="email" placeholder="Email *" value={formData.email} onChange={handleChange} className="w-full mb-2 p-3 rounded-xl bg-[#1f2937] border border-gray-700 text-white" />
+                {errors.email && <p className="text-red-400 text-xs">{errors.email}</p>}
 
-                  <input
-                    type="text"
-                    name="lastName"
-                    value={formData.lastName}
-                    onChange={handleChange}
-                    placeholder="Last Name"
-                    className="w-full bg-[#1f2937] border border-gray-700 rounded-xl px-4 py-3 text-white"
-                  />
-
-                  <input
-                    type="tel"
-                    name="phone"
-                    maxLength="10"
-                    value={formData.phone}
-                    onChange={handleChange}
-                    placeholder="Phone Number"
-                    className="w-full bg-[#1f2937] border border-gray-700 rounded-xl px-4 py-3 text-white"
-                  />
-
-                  {errors.phone && (
-                    <p className="text-red-400 text-sm">{errors.phone}</p>
-                  )}
-
-                  <input
-                    type="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    placeholder="Email *"
-                    className="w-full bg-[#1f2937] border border-gray-700 rounded-xl px-4 py-3 text-white"
-                  />
-
-                  {errors.email && (
-                    <p className="text-red-400 text-sm">{errors.email}</p>
-                  )}
-
-                  <button
-                    onClick={handleSubmit}
-                    disabled={loading}
-                    className="w-full py-3 rounded-xl font-semibold bg-gradient-to-r from-blue-600 to-indigo-600"
-                  >
-                    {loading ? "Submitting..." : "SUBMIT"}
-                  </button>
-
-                </div>
-              </div>
+                <button onClick={handleSubmit} disabled={loading} className="w-full mt-4 bg-gradient-to-r from-blue-600 to-indigo-600 py-3 rounded-xl text-white font-semibold shadow-lg">
+                  {loading ? "Submitting..." : "SUBMIT"}
+                </button>
+              </>
             ) : (
-              <div className="text-center space-y-6">
-                <div className="w-20 h-20 mx-auto rounded-full bg-green-500/20 flex items-center justify-center text-4xl">
-                  ✅
-                </div>
-
-                <h2 className="text-3xl font-bold text-white">
-                  Thank You!
-                </h2>
-
-                <p className="text-gray-400 max-w-sm mx-auto">
-                  Your registration has been successfully submitted.
-                </p>
-
-                <button
-                  onClick={onClose}
-                  className="px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-700"
-                >
+              <div className="text-center text-white">
+                <div className="text-4xl mb-3">✅</div>
+                <h2 className="text-2xl font-bold">Thank You!</h2>
+                <button onClick={onClose} className="mt-4 px-6 py-2 bg-blue-600 rounded">
                   Close
                 </button>
               </div>
             )}
-
           </div>
+
         </div>
       </div>
     </div>
