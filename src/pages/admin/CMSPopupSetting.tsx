@@ -6,16 +6,19 @@ import { Upload, Clock, Loader2 } from "lucide-react";
 const CMSPopupSetting = () => {
   const [loading, setLoading] = useState(false);
 
+  
+
   const [cmsData, setCmsData] = useState({
-    title: "",
-    description: "",
-    image: null,
-    preview: "",
-    hours: "00",
-    minutes: "00",
-    seconds: "00",
-    enabled: true,
-  });
+  title: "",
+  description: "",
+  image: null,
+  preview: "",
+  hours: "00",
+  minutes: "00",
+  seconds: "00",
+  enabled: true,
+  removeImage: false,
+});
 
   /* ==============================
      FETCH EXISTING CMS
@@ -58,15 +61,16 @@ const CMSPopupSetting = () => {
   };
 
   const handleCmsImage = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setCmsData({
-        ...cmsData,
-        image: file,
-        preview: URL.createObjectURL(file),
-      });
-    }
-  };
+  const file = e.target.files[0];
+  if (file) {
+    setCmsData({
+      ...cmsData,
+      image: file,
+      preview: URL.createObjectURL(file),
+      removeImage: false, // ✅ IMPORTANT
+    });
+  }
+};
 
   /* ==============================
      SUBMIT CMS
@@ -84,10 +88,14 @@ const CMSPopupSetting = () => {
       formData.append("minutes", cmsData.minutes);
       formData.append("seconds", cmsData.seconds);
       formData.append("enabled", cmsData.enabled);
+      
+      formData.append("removeImage", cmsData.removeImage);
 
-      if (cmsData.image) {
-        formData.append("image", cmsData.image);
-      }
+        // ✅ ONLY send image if file exists
+        if (cmsData.image instanceof File) {
+          formData.append("image", cmsData.image);
+        }
+        
 
       const res = await axios.post(
         "https://cst-acadmay-backend.onrender.com/api/cms-popup",
@@ -111,6 +119,14 @@ const CMSPopupSetting = () => {
     }
   };
 
+  const handleRemoveImage = () => {
+    setCmsData({
+      ...cmsData,
+      image: null,
+      preview: "",
+      removeImage: true, // ✅ MUST
+    });
+  };
   return (
     <div className="bg-white rounded-xl shadow border border-gray-200 p-6">
       <h2 className="text-xl font-bold mb-6 text-[#0B1C3D]">
@@ -149,14 +165,23 @@ const CMSPopupSetting = () => {
         <div>
           <label className="block text-sm font-medium mb-2">Upload Image</label>
 
-          {cmsData.preview && (
-            <img
-              src={cmsData.preview}
-              alt="Preview"
-              className="w-32 mb-3 rounded-lg border"
-            />
-          )}
+         {cmsData.preview && (
+        <div className="relative w-32 mb-3">
+          <img
+            src={cmsData.preview}
+            alt="Preview"
+            className="w-32 rounded-lg border"
+          />
 
+          <button
+            type="button"
+            onClick={handleRemoveImage}
+            className="absolute top-1 right-1 bg-red-500 text-white text-xs px-2 py-1 rounded"
+          >
+            Remove
+          </button>
+        </div>
+      )}
           <label className="flex items-center gap-3 cursor-pointer bg-gray-100 p-3 rounded-lg border border-dashed hover:border-[#F97316]">
             <Upload size={18} />
             <span className="text-sm truncate">

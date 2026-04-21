@@ -38,6 +38,17 @@ const WorkshopPopup = ({ isOpen, onClose }) => {
     fetchCMS();
   }, []);
 
+  /* ================= DATE CHECK ================= */
+
+  const today = new Date().toISOString().split("T")[0];
+
+  // 👉 अगर date है और match नहीं कर रही → popup hide
+  if (cmsData?.date && cmsData.date !== today) return null;
+
+  // 👉 अगर same day पहले close हो चुका है
+  const closedDate = localStorage.getItem("popupClosedDate");
+  if (closedDate === today) return null;
+
   /* ================= REAL TIME TIMER ================= */
 
   useEffect(() => {
@@ -46,30 +57,31 @@ const WorkshopPopup = ({ isOpen, onClose }) => {
     const interval = setInterval(() => {
       const now = new Date();
 
-      const target = new Date();
-      target.setHours(Number(cmsData.hours));
-      target.setMinutes(Number(cmsData.minutes));
-      target.setSeconds(Number(cmsData.seconds));
-      target.setMilliseconds(0);
+      // 👉 SAFE TARGET (date हो या न हो दोनों case handle)
+      let target;
 
-      // 👉 if today's time passed → next day
-      if (target <= now) {
-        target.setDate(target.getDate() + 1);
+      if (cmsData?.date) {
+        target = new Date(
+          `${cmsData.date}T${cmsData.hours}:${cmsData.minutes}:${cmsData.seconds}`
+        );
+      } else {
+        target = new Date();
+        target.setHours(Number(cmsData.hours));
+        target.setMinutes(Number(cmsData.minutes));
+        target.setSeconds(Number(cmsData.seconds));
       }
 
       const diff = Math.max(0, Math.floor((target - now) / 1000));
 
       setElapsedSeconds(diff);
 
-      // ✅ जब timer खत्म हो जाए
+      // ✅ timer खत्म
       if (diff === 0) {
         clearInterval(interval);
-
-        // 👉 popup auto close
         onClose();
 
-        // 👉 optional: CMS दुबारा fetch (next cycle)
-        fetchCMS();
+        // 👉 same day दुबारा ना आए
+        localStorage.setItem("popupClosedDate", today);
       }
 
     }, 1000);
@@ -111,7 +123,7 @@ const WorkshopPopup = ({ isOpen, onClose }) => {
     if (!formData.email.trim()) {
       newErrors.email = "Email is required";
     } else if (!emailRegex.test(formData.email)) {
-      newErrors.email = "Only Gmail allowed (example@gmail.com)";
+      newErrors.email = "Only Gmail allowed";
     }
 
     if (formData.phone && !/^[0-9]{10}$/.test(formData.phone)) {
@@ -148,6 +160,7 @@ const WorkshopPopup = ({ isOpen, onClose }) => {
 
       if (res.data.success) {
         toast.success("Registration Successful 🎉");
+        localStorage.setItem("popupRegistered", "true");
 
         setIsSubmitted(true);
 
