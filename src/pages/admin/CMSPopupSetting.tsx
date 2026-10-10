@@ -26,7 +26,7 @@ const CMSPopupSetting = () => {
   const fetchCMS = async () => {
     try {
       const res = await axios.get(
-        "https://cst-acadmay-backend.onrender.com/api/cms-popup"
+        `${import.meta.env.VITE_API_URL}/cms-popup`
       );
 
       if (res.data.success && res.data.data) {
@@ -98,7 +98,7 @@ const CMSPopupSetting = () => {
         
 
       const res = await axios.post(
-        "https://cst-acadmay-backend.onrender.com/api/cms-popup",
+        `${import.meta.env.VITE_API_URL}/cms-popup`,
         formData,
         {
           headers: {

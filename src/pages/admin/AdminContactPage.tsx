@@ -15,7 +15,7 @@ const AdminContactPage = () => {
   const fetchData = async () => {
     try {
       setLoading(true);
-      const res = await axios.get("https://cst-acadmay-backend.onrender.com/api/contact");
+      const res = await axios.get(`${import.meta.env.VITE_API_URL}/contact`);
       if (res.data.success) {
         setData(res.data.data);
       }
@@ -35,7 +35,7 @@ const AdminContactPage = () => {
     if (!window.confirm("Are you sure you want to delete?")) return;
 
     try {
-      await axios.delete(`https://cst-acadmay-backend.onrender.com/api/contact/${id}`);
+      await axios.delete(`${import.meta.env.VITE_API_URL}/contact/${id}`);
       toast.success("Contact deleted successfully");
       fetchData();
     } catch {

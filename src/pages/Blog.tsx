@@ -25,7 +25,7 @@ const Blog = () => {
     const fetchBlogs = async () => {
       try {
         const res = await axios.get(
-          "https://cst-acadmay-backend.onrender.com/api/services/blogs"
+          `${import.meta.env.VITE_API_URL}/services/blogs`
         );
 
         // Sort newest first

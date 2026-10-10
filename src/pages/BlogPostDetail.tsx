@@ -26,7 +26,7 @@ const BlogPostDetail = () => {
       try {
         // ✅ Detail API (slug)
         const detailRes = await axios.get(
-          `https://cst-acadmay-backend.onrender.com/api/services/detail/${slug}`
+          `${import.meta.env.VITE_API_URL}/services/detail/${slug}`
         );
 
         const currentPost = detailRes.data.data;
@@ -34,7 +34,7 @@ const BlogPostDetail = () => {
 
         // ✅ Blog List API (sidebar)
         const listRes = await axios.get(
-          "https://cst-acadmay-backend.onrender.com/api/services/blogs"
+          `${import.meta.env.VITE_API_URL}/services/blogs`
         );
 
         const sorted = listRes.data.sort(

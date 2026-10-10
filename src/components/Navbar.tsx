@@ -18,7 +18,7 @@ useEffect(() => {
   const fetchNavbarCategories = async () => {
     try {
       const res = await axios.get(
-        "https://cst-acadmay-backend.onrender.com/api/services/navbar-categories",
+        `${import.meta.env.VITE_API_URL}/services/navbar-categories`,
         {
           params: { type: "course" },
         }
@@ -95,11 +95,11 @@ useEffect(() => {
             <NavigationMenu className={cn(isScrolled ? "" : "text-white")}>
               <NavigationMenuList>
                 <NavigationMenuItem>
-                  <Link to="/">
-                    <NavigationMenuLink className={cn(navigationMenuTriggerStyle(), isScrolled ? "text-gray-100 hover:text-white bg-transparent hover:bg-gray-800" : "text-gray-100 hover:text-white bg-transparent hover:bg-gray-800")}>
+                  <NavigationMenuLink asChild className={cn(navigationMenuTriggerStyle(), isScrolled ? "text-gray-100 hover:text-white bg-transparent hover:bg-gray-800" : "text-gray-100 hover:text-white bg-transparent hover:bg-gray-800")}>
+                    <Link to="/">
                       Home
-                    </NavigationMenuLink>
-                  </Link>
+                    </Link>
+                  </NavigationMenuLink>
                 </NavigationMenuItem>
                   <NavigationMenuItem>
                   <NavigationMenuTrigger className={cn(isScrolled ? "text-gray-100 hover:text-white bg-transparent hover:bg-gray-800" : "text-gray-100 hover:text-white bg-transparent hover:bg-gray-800")}>
@@ -142,25 +142,25 @@ useEffect(() => {
                   </NavigationMenuContent>
                 </NavigationMenuItem>
                 <NavigationMenuItem>
-                  <Link to="/cases">
-                    <NavigationMenuLink className={cn(navigationMenuTriggerStyle(), isScrolled ? "text-gray-100 hover:text-white bg-transparent hover:bg-gray-800" : "text-gray-100 hover:text-white bg-transparent hover:bg-gray-800")}>
+                  <NavigationMenuLink asChild className={cn(navigationMenuTriggerStyle(), isScrolled ? "text-gray-100 hover:text-white bg-transparent hover:bg-gray-800" : "text-gray-100 hover:text-white bg-transparent hover:bg-gray-800")}>
+                    <Link to="/cases">
                       Case Studies
-                    </NavigationMenuLink>
-                  </Link>
+                    </Link>
+                  </NavigationMenuLink>
                 </NavigationMenuItem>                
                 <NavigationMenuItem>
-                  <Link to="/blog">
-                    <NavigationMenuLink className={cn(navigationMenuTriggerStyle(), isScrolled ? "text-gray-100 hover:text-white bg-transparent hover:bg-gray-800" : "text-gray-100 hover:text-white bg-transparent hover:bg-gray-800")}>
+                  <NavigationMenuLink asChild className={cn(navigationMenuTriggerStyle(), isScrolled ? "text-gray-100 hover:text-white bg-transparent hover:bg-gray-800" : "text-gray-100 hover:text-white bg-transparent hover:bg-gray-800")}>
+                    <Link to="/blog">
                       Blogs
-                    </NavigationMenuLink>
-                  </Link>
+                    </Link>
+                  </NavigationMenuLink>
                 </NavigationMenuItem>
                 <NavigationMenuItem>
-                  <Link to="/about">
-                    <NavigationMenuLink className={cn(navigationMenuTriggerStyle(), isScrolled ? "text-gray-100 hover:text-white bg-transparent hover:bg-gray-800" : "text-gray-100 hover:text-white bg-transparent hover:bg-gray-800")}>
+                  <NavigationMenuLink asChild className={cn(navigationMenuTriggerStyle(), isScrolled ? "text-gray-100 hover:text-white bg-transparent hover:bg-gray-800" : "text-gray-100 hover:text-white bg-transparent hover:bg-gray-800")}>
+                    <Link to="/about">
                       About Us
-                    </NavigationMenuLink>
-                  </Link>
+                    </Link>
+                  </NavigationMenuLink>
                 </NavigationMenuItem>
                 
               

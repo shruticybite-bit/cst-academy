@@ -21,6 +21,18 @@
         functionality_storage: localStorage.getItem('silktideCookieChoice_necessary') === 'true' ? 'granted' : 'denied',
         security_storage: localStorage.getItem('silktideCookieChoice_necessary') === 'true' ? 'granted' : 'denied'
       });
+
+      // Suppress the unfixable third-party Silktide script errors from the console
+      window.addEventListener('error', function (event) {
+        if (
+          (event.filename && event.filename.indexOf('silktide') !== -1) ||
+          (event.message && event.message.indexOf('silktide') !== -1) ||
+          (event.message && event.message.indexOf('updateCookieBannerConfig') !== -1) ||
+          (event.message && event.message.indexOf('forEach') !== -1 && event.error && event.error.stack && event.error.stack.indexOf('silktide') !== -1)
+        ) {
+          event.preventDefault(); // Prevents the error from showing up in the console
+        }
+      });
     </script>
     <!-- Google Tag Manager -->
     <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':

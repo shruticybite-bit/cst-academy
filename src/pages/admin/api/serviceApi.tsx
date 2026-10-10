@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API = "https://cst-acadmay-backend.onrender.com/api/services";
+const API = `${import.meta.env.VITE_API_URL}/services`;
 
 export const addService = (data) =>
   axios.post(`${API}/add`, data, {

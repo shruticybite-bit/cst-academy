@@ -15,7 +15,7 @@ const AdminWorkshopPage = () => {
     try {
       setLoading(true);
       const res = await axios.get(
-        "https://cst-acadmay-backend.onrender.com/api/workshop-register"
+        `${import.meta.env.VITE_API_URL}/workshop-register`
       );
       if (res.data.success) {
         setData(res.data.data);
@@ -36,7 +36,7 @@ const AdminWorkshopPage = () => {
 
     try {
       await axios.delete(
-        `https://cst-acadmay-backend.onrender.com/api/workshop-register/${id}`
+        `${import.meta.env.VITE_API_URL}/workshop-register/${id}`
       );
       toast.success("Deleted successfully");
       fetchData();

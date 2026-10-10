@@ -24,7 +24,7 @@ const Blogs = () => {
     const fetchBlogs = async () => {
       try {
         const res = await axios.get(
-          "https://cst-acadmay-backend.onrender.com/api/services/blogs"
+          `${import.meta.env.VITE_API_URL}/services/blogs`
         );
         const blogData = res.data?.data || res.data;
         setBlogs(blogData);

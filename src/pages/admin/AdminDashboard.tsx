@@ -29,7 +29,7 @@ const AdminDashboard = () => {
 
       // Workshop
       const workshopRes = await axios.get(
-        "https://cst-acadmay-backend.onrender.com/api/workshop-register"
+        `${import.meta.env.VITE_API_URL}/workshop-register`
       );
 
       const workshops = workshopRes.data?.data || [];
@@ -72,7 +72,7 @@ const AdminDashboard = () => {
 
       // Contact
       const contactRes = await axios.get(
-        "https://cst-acadmay-backend.onrender.com/api/contact"
+        `${import.meta.env.VITE_API_URL}/contact`
       );
 
       setContactCount(contactRes.data?.data?.length || 0);
@@ -80,7 +80,7 @@ const AdminDashboard = () => {
 
       // Services (Courses + Blogs)
       const serviceRes = await axios.get(
-        "https://cst-acadmay-backend.onrender.com/api/services/list"
+        `${import.meta.env.VITE_API_URL}/services/list`
       );
 
       const services = serviceRes.data?.data || [];

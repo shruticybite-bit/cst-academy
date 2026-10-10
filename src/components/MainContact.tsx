@@ -91,7 +91,7 @@ const ContactSection = () => {
       setLoading(true);
 
       const res = await axios.post(
-        "https://cst-acadmay-backend.onrender.com/api/contact",
+        `${import.meta.env.VITE_API_URL}/contact`,
         formData
       );
 

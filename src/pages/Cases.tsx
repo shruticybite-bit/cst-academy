@@ -23,7 +23,7 @@ const Cases = () => {
     const fetchCases = async () => {
       try {
         const res = await axios.get(
-          "https://cst-acadmay-backend.onrender.com/api/services/case-studies"
+          `${import.meta.env.VITE_API_URL}/services/case-studies`
         );
 
         if (res.data.success) {

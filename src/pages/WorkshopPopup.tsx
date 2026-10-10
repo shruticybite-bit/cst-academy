@@ -22,7 +22,7 @@ const WorkshopPopup = ({ isOpen, onClose }) => {
     const fetchCMS = async () => {
       try {
         const res = await axios.get(
-          "https://cst-acadmay-backend.onrender.com/api/cms-popup"
+          `${import.meta.env.VITE_API_URL}/cms-popup`
         );
         if (res?.data?.success && res?.data?.data) {
           setCmsData(res.data.data);
@@ -40,31 +40,22 @@ const WorkshopPopup = ({ isOpen, onClose }) => {
     return () => (document.body.style.overflow = "auto");
   }, [isOpen]);
 
-  /* ================= TIMER ================= */
+/* ================= TIMER ================= */
 useEffect(() => {
   if (!isOpen || !cmsData?.enabled) return;
 
+  // Calculate target expiration time: updatedAt + (hours + minutes + seconds)
+  const savedTime = cmsData?.updatedAt ? new Date(cmsData.updatedAt).getTime() : new Date().getTime();
+  const durationMs = 
+    (Number(cmsData?.hours || 0) * 3600 + 
+     Number(cmsData?.minutes || 0) * 60 + 
+     Number(cmsData?.seconds || 0)) * 1000;
+     
+  const targetTime = savedTime + durationMs;
+
   const interval = setInterval(() => {
-    const now = new Date();
-
-    let target;
-
-    if (cmsData?.date) {
-      // ✅ अगर date backend से है
-      target = new Date(
-        `${cmsData.date}T${cmsData.hours}:${cmsData.minutes}:${cmsData.seconds}`
-      );
-    } else {
-      // ✅ same day time
-      target = new Date();
-
-      target.setHours(Number(cmsData?.hours || 0));
-      target.setMinutes(Number(cmsData?.minutes || 0));
-      target.setSeconds(Number(cmsData?.seconds || 0));
-      target.setMilliseconds(0);
-    }
-
-    let diff = Math.floor((target.getTime() - now.getTime()) / 1000);
+    const now = new Date().getTime();
+    let diff = Math.floor((targetTime - now) / 1000);
 
     // ✅ अगर time निकल गया
     if (diff <= 0) {
@@ -75,6 +66,15 @@ useEffect(() => {
 
     setRemainingSeconds(diff);
   }, 1000);
+
+  // Run once immediately so it doesn't wait 1 second
+  const now = new Date().getTime();
+  let diff = Math.floor((targetTime - now) / 1000);
+  if (diff <= 0) {
+    setRemainingSeconds(0);
+  } else {
+    setRemainingSeconds(diff);
+  }
 
   return () => clearInterval(interval);
 }, [isOpen, cmsData]);
@@ -126,7 +126,7 @@ useEffect(() => {
       setLoading(true);
 
       const res = await axios.post(
-        "https://cst-acadmay-backend.onrender.com/api/workshop-register",
+        `${import.meta.env.VITE_API_URL}/workshop-register`,
         formData
       );
 

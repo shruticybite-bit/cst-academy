@@ -25,7 +25,7 @@ const LoginPage = () => {
 
     try {
       const response = await axios.post(
-        "https://cst-acadmay-backend.onrender.com/api/auth/login",
+        `${import.meta.env.VITE_API_URL}/auth/login`,
         {
           email,
           password,

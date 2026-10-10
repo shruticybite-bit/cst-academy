@@ -28,7 +28,7 @@ const Services = () => {
         if (!type || !category) return;
 
         const response = await axios.get(
-          "https://cst-acadmay-backend.onrender.com/api/services/by-type-category",
+          `${import.meta.env.VITE_API_URL}/services/by-type-category`,
           {
             params: { type, category },
           }

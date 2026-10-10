@@ -37,7 +37,7 @@ const CaseStudyDetail = () => {
         }
 
         const res = await axios.get(
-          `https://cst-acadmay-backend.onrender.com/api/services/detail/${slug}`
+          `${import.meta.env.VITE_API_URL}/services/detail/${slug}`
         );
 
         if (res.data?.success && res.data?.data) {

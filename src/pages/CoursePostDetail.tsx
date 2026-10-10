@@ -31,7 +31,7 @@ const CoursePostDetail = () => {
         if (!slug) return;
 
         const response = await axios.get(
-          `https://cst-acadmay-backend.onrender.com/api/services/detail/${slug}`
+          `${import.meta.env.VITE_API_URL}/services/detail/${slug}`
         );
 
         if (response.data.success) {
