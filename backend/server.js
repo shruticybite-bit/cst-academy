@@ -4,7 +4,6 @@ dotenv.config();
 import express from "express";
 import cors from "cors";
 import helmet from "helmet";
-import xss from "xss-clean";
 import rateLimit from "express-rate-limit";
 
 import authRoutes from "./routes/auth.js";
@@ -21,9 +20,6 @@ const app = express();
 
 // Security Headers
 app.use(helmet());
-
-// Prevent XSS attacks
-app.use(xss());
 
 // Rate Limiting (Prevent Spam/DDoS)
 const limiter = rateLimit({
